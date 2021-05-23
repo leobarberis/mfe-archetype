@@ -5,6 +5,10 @@
       "description": "MFE Generation",
       "factory": "./mfe-archetype/index#newMfe",
       "schema": "./mfe-archetype/schema.json"
+    },
+    "new-container": {
+      "description": "Container Generation",
+      "factory": "./mfe-archetype/index#newContainer"
     }
   }
 }

@@ -14,6 +14,31 @@ import { Framework } from "./framework";
 import { strings } from "@angular-devkit/core";
 import { NodePackageInstallTask } from "@angular-devkit/schematics/tasks";
 
+export function newContainer(_options: Schema): Rule {
+  return (tree: Tree, _context: SchematicContext) => {
+    function generateContainer(): Rule {
+      const templateSource = apply(url("./files/container"), [
+        template({ ..._options, ...strings }),
+      ]);
+      return mergeWith(templateSource, MergeStrategy.Overwrite);
+    }
+
+    function updateContainer(context: SchematicContext): Rule {
+      return () => {
+        context.addTask(
+          new NodePackageInstallTask({
+            packageManager: "npm",
+            workingDirectory: "container",
+          })
+        );
+      };
+    }
+
+    const rule = chain([generateContainer, updateContainer(_context)]);
+    return rule(tree, _context) as Rule;
+  };
+}
+
 export function newMfe(_options: Schema): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     const { fw, routing, name } = _options;
