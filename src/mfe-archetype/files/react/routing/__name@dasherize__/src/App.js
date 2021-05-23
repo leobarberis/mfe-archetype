@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route, Router } from "react-router-dom";
+import { Switch, Route, Router, Redirect } from "react-router-dom";
 import {
   StylesProvider,
   createGenerateClassName,
@@ -19,8 +19,8 @@ export default ({ history }) => {
       <StylesProvider generateClassName={generateClassName}>
         <Router history={history}>
           <Switch>
-            <Route exact path="/<%= name %>/page" component={Home} />
-            <Route exact path="/<%= name %>" component={Page} />
+            <Route exact path="/<%= name %>" component={Home} />
+            <Route exact path="/<%= name %>/page" component={Page} />
             <Route>{devRoot && <Redirect to="/<%= name %>" />}</Route>
           </Switch>
         </Router>
