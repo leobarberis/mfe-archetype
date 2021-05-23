@@ -1,0 +1,17 @@
+<div class="panel panel-default">
+  <div class="panel-heading"><%= classify(name) %></div>
+  <div class="panel-body">
+    <p>Welcome!</p>
+  </div>
+</div>
+
+<br />
+<div class="btn-group" role="group" aria-label="Carousel toggle controls">
+  <button
+    type="button"
+    (click)="navigate('/<%= name %>/page')"
+    class="btn btn-outline-dark btn-sm"
+  >
+    My Page
+  </button>
+</div>

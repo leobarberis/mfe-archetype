@@ -1,9 +1,10 @@
 {
   "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
-    "new": {
+    "new-mfe": {
       "description": "MFE Generation",
-      "factory": "./mfe-archetype/index#mfeArchetype"
+      "factory": "./mfe-archetype/index#newMfe",
+      "schema": "./mfe-archetype/schema.json"
     }
   }
 }

@@ -1,0 +1,56 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "mfe-archetype",
+    "title": "mfe creator",
+    "type": "object",
+    "description": "mfe multi-purpose generator",
+    "properties": {
+        "name": {
+            "type":"string",
+            "description": "The name of the mfe project",
+            "$default": {
+                "$source": "argv",
+                "index": 0
+            },
+            "x-prompt": "What is your mfe project name?"
+        },
+        "fw": {
+            "type":"string",
+            "default": "angular",
+            "description": "Base framework",
+            "enum": [
+                "angular",
+                "react"
+            ],
+            "x-prompt": {
+                "message": "Which framework do you want to use?",
+                "type:": "list",
+                "items": [
+                    { "value": "angular", "label": "angular"},
+                    { "value": "react", "label": "react"}
+                ]
+            }
+        },
+        "routing": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether your app requires inner navigation or not",
+            "x-prompt": {
+                "message":"Does your app requires navigation?",
+                "type": "confirmation"
+            }
+        },
+        "port": {
+            "type":"number",
+            "default": 3000,
+            "description": "Development port",
+            "x-prompt": {
+                "message": "Which port do you want for development?",
+                "type": "input"
+            }
+        }
+    },
+    "required": [
+        "name"
+    ]
+}
