@@ -36,7 +36,7 @@
             "default": true,
             "description": "Whether your app requires inner navigation or not",
             "x-prompt": {
-                "message":"Does your app requires navigation?",
+                "message":"Does your app require navigation?",
                 "type": "confirmation"
             }
         },

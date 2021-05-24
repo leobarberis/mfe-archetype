@@ -30,13 +30,17 @@ export default () => {
       });
       history.listen(onParentNavigate);
   <% } %>
-  <% if(!routing) { %>
+  <% if(!routing && fw == "react") { %>
     useEffect(() => {
       mount(ref.current);
   <% } %>
-<% if(fw == "angular") { %>
+  <% if(!routing && fw == "angular") { %>
+    useEffect(() => {
+      const {onUnmount} = mount(ref.current);
+  <% } %>
+  <% if(fw == "angular") { %>
   return () => onUnmount();
-<% } %>    
+  <% } %>    
   }, []);
   return <div ref={ref} />;
 };
