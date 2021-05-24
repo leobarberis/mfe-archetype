@@ -4,9 +4,7 @@ import React, { useRef, useEffect } from "react";
 
 export default () => {
   const ref = useRef(null);
-  <% if(routing) { %>
-  const history = useHistory();
-  <% } %>
+  <% if(routing) { %>const history = useHistory();  <% } %>
   <% if(routing && fw == "angular") { %>
     useEffect(() => {
       const { onParentNavigate, onUnmount } = mount(ref.current, {

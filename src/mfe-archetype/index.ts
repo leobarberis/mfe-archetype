@@ -15,7 +15,12 @@ import { Schema } from "./schema";
 import { Framework } from "./framework";
 import { normalize, strings } from "@angular-devkit/core";
 import { NodePackageInstallTask } from "@angular-devkit/schematics/tasks";
-import { camelize, capitalize } from "@angular-devkit/core/src/utils/strings";
+import {
+  camelize,
+  capitalize,
+  classify,
+} from "@angular-devkit/core/src/utils/strings";
+const prettier = require("prettier");
 
 export function addMFE(_options: Schema): Rule {
   return (tree: Tree, _context: SchematicContext) => {
@@ -36,7 +41,10 @@ export function addMFE(_options: Schema): Rule {
         content.slice(0, appendIndex) +
         content2Append +
         content.slice(appendIndex);
-      tree.overwrite(path, updatedContent);
+      tree.overwrite(
+        path,
+        prettier.format(updatedContent, { semi: true, parser: "babel" })
+      );
     }
 
     function updateAppWrapper(tree: Tree) {
@@ -55,7 +63,10 @@ export function addMFE(_options: Schema): Rule {
         content.slice(0, appendIndex) +
         content2Append +
         content.slice(appendIndex);
-      tree.overwrite(path, updatedContent);
+      tree.overwrite(
+        path,
+        prettier.format(updatedContent, { semi: true, parser: "babel" })
+      );
     }
 
     function updateAppWebPackDev(tree: Tree) {
@@ -74,7 +85,10 @@ export function addMFE(_options: Schema): Rule {
         content.slice(0, appendIndex) +
         content2Append +
         content.slice(appendIndex);
-      tree.overwrite(path, updatedContent);
+      tree.overwrite(
+        path,
+        prettier.format(updatedContent, { semi: true, parser: "babel" })
+      );
     }
 
     function updateAppWebPackProd(tree: Tree) {
@@ -88,12 +102,15 @@ export function addMFE(_options: Schema): Rule {
       const appendIndex = content.indexOf("// mfeRemotesEntries");
       const content2Append = `${camelize(name)}: \`${camelize(
         name
-      )}@\${domain}/remoteEntry.js\`, \n`;
+      )}@\${${name}_domain}/remoteEntry.js\`, \n`;
       const updatedContent =
         content.slice(0, appendIndex) +
         content2Append +
         content.slice(appendIndex);
-      tree.overwrite(path, updatedContent);
+      tree.overwrite(
+        path,
+        prettier.format(updatedContent, { semi: true, parser: "babel" })
+      );
     }
 
     function generateWrapper(): Rule {
@@ -104,12 +121,26 @@ export function addMFE(_options: Schema): Rule {
       return mergeWith(templateSource, MergeStrategy.Overwrite);
     }
 
+    function formatWrapper(): Rule {
+      return () => {
+        const path = `./container/src/components/${classify(name)}App.js`;
+        const content = tree.read(path);
+        if (content) {
+          const formatted = prettier.format(content.toString(), {
+            semi: true,
+            parser: "babel",
+          });
+          tree.overwrite(path, formatted);
+        }
+      };
+    }
+
     updateAppRoute(tree);
     updateAppWrapper(tree);
     updateAppWebPackDev(tree);
     updateAppWebPackProd(tree);
 
-    const rule = chain([generateWrapper]);
+    const rule = chain([generateWrapper, formatWrapper]);
     return rule(tree, _context) as Rule;
   };
 }
