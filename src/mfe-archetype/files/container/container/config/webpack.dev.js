@@ -15,7 +15,9 @@ const devConfig = {
   plugins: [
     new ModuleFederationPlugin({
       name: "container",
-      remotes: {},
+      remotes: {
+        // mfeRemotesEntries
+      },
       shared: packageJson.dependencies,
     }),
   ],

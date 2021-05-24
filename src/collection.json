@@ -9,6 +9,11 @@
     "new-container": {
       "description": "Container Generation",
       "factory": "./mfe-archetype/index#newContainer"
+    },
+    "add-mfe": {
+      "description": "Add MFE to Container",
+      "factory": "./mfe-archetype/index#addMFE",
+      "schema": "./mfe-archetype/schema-add-mfe.json"
     }
   }
 }
