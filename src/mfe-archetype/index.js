@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newMfe = exports.newContainer = exports.addMFE = exports.newContainerMfe = void 0;
+exports.newMfe = exports.newContainer = exports.addMFE = exports.deleteMFE = exports.newContainerMfe = void 0;
 const schematics_1 = require("@angular-devkit/schematics");
 const framework_1 = require("./framework");
 const core_1 = require("@angular-devkit/core");
@@ -17,6 +17,32 @@ function newContainerMfe(_options) {
     };
 }
 exports.newContainerMfe = newContainerMfe;
+function deleteMFE(_options) {
+    return (tree, _context) => {
+        const { name, port } = _options;
+        function deleteFromFile(path, oldContent) {
+            const normPath = core_1.normalize(path);
+            const buffer = tree.read(normPath);
+            const content = buffer === null || buffer === void 0 ? void 0 : buffer.toString();
+            if (!content) {
+                throw new schematics_1.SchematicsException(`${path} not found`);
+            }
+            const updatedContent = content.replace(oldContent, '');
+            tree.overwrite(normPath, prettier.format(updatedContent, { semi: true, parser: "babel" }));
+        }
+        deleteFromFile("./container/src/App.js", `<Route path="/${name}" component={${strings_1.capitalize(name)}Lazy} />`);
+        deleteFromFile("./container/src/App.js", `const ${strings_1.capitalize(name)}Lazy = lazy(() => import("./components/${strings_1.capitalize(name)}App"));`);
+        deleteFromFile("./container/config/webpack.dev.js", `${strings_1.camelize(name)}: "${strings_1.camelize(name)}@http://localhost:${port}/remoteEntry.js",`);
+        deleteFromFile("./container/config/webpack.prod.js", `${strings_1.camelize(name)}: \`${strings_1.camelize(name)}@\${${name}_domain}/remoteEntry.js\`,`);
+        const oldFilePath = core_1.normalize(`./container/src/components/${strings_1.classify(name)}App.js`);
+        const oldFileBuffer = tree.read(oldFilePath);
+        if (!oldFileBuffer) {
+            throw new schematics_1.SchematicsException(`${oldFilePath} not found`);
+        }
+        tree.delete(oldFilePath);
+    };
+}
+exports.deleteMFE = deleteMFE;
 function addMFE(_options) {
     return (tree, _context) => {
         const { name, port } = _options;

@@ -32,6 +32,38 @@ export function newContainerMfe(_options: Schema): Rule {
   };
 }
 
+export function deleteMFE(_options: Schema) {
+  return (tree: Tree, _context: SchematicContext) => {
+    const { name, port } = _options; 
+
+    function deleteFromFile(path: string, oldContent: string) {
+      const normPath = normalize(path);
+      const buffer = tree.read(normPath);
+      const content = buffer?.toString();
+      if(!content) {
+        throw new SchematicsException(`${path} not found`);
+      }
+
+      const updatedContent = content.replace(oldContent, '');
+      tree.overwrite(normPath, prettier.format(updatedContent, { semi: true, parser: "babel" }));
+    }
+
+    deleteFromFile("./container/src/App.js",`<Route path="/${name}" component={${capitalize(name)}Lazy} />`);
+    deleteFromFile("./container/src/App.js",`const ${capitalize(name)}Lazy = lazy(() => import("./components/${capitalize(name)}App"));`);
+    deleteFromFile("./container/config/webpack.dev.js",`${camelize(name)}: "${camelize(name)}@http://localhost:${port}/remoteEntry.js",`)
+    deleteFromFile("./container/config/webpack.prod.js",`${camelize(name)}: \`${camelize(name)}@\${${name}_domain}/remoteEntry.js\`,`);
+
+    const oldFilePath = normalize(`./container/src/components/${classify(name)}App.js`);
+    const oldFileBuffer = tree.read(oldFilePath);
+    if(!oldFileBuffer){
+      throw new SchematicsException(`${oldFilePath} not found`); 
+    }
+
+    tree.delete(oldFilePath);
+
+  }
+}
+
 export function addMFE(_options: Schema): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     const { name, port } = _options;
