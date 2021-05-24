@@ -35,93 +35,38 @@ export function newContainerMfe(_options: Schema): Rule {
 export function addMFE(_options: Schema): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     const { name, port } = _options;
-    function updateAppRoute(tree: Tree) {
-      const path = normalize("./container/src/App.js");
-      const buffer = tree.read(path);
+
+    function formatFile(path: string): Rule {
+      return () => {
+        const normPath = normalize(path);
+        const content = tree.read(normPath);
+        if (content) {
+          const formatted = prettier.format(content.toString(), {
+            semi: true,
+            parser: "babel",
+          });
+          tree.overwrite(normPath, formatted);
+        }
+      };
+    } 
+
+    function updateFile(path: string, appendRef: string, newContent: string) {
+      const normPath = normalize(path);
+      const buffer = tree.read(normPath);
       const content = buffer?.toString();
-      if (!content) {
-        throw new SchematicsException("App.js not found");
+      if(!content) {
+        throw new SchematicsException(`${path} not found`);
       }
 
-      const appendIndex = content.indexOf("</Switch>");
-      const content2Append = `<Route path="/${name}" component={${capitalize(
-        name
-      )}Lazy} /> \n`;
-      const updatedContent =
-        content.slice(0, appendIndex) +
-        content2Append +
-        content.slice(appendIndex);
-      tree.overwrite(
-        path,
-        prettier.format(updatedContent, { semi: true, parser: "babel" })
-      );
+      const _appendIndex = content.indexOf(appendRef);
+      const updatedContent = content.slice(0, _appendIndex) + newContent + content.slice(_appendIndex);
+      tree.overwrite(normPath, prettier.format(updatedContent, { semi: true, parser: "babel" }));
     }
 
-    function updateAppWrapper(tree: Tree) {
-      const path = normalize("./container/src/App.js");
-      const buffer = tree.read(path);
-      const content = buffer?.toString();
-      if (!content) {
-        throw new SchematicsException("App.js not found");
-      }
-
-      const appendIndex = content.indexOf("const history");
-      const content2Append = `const ${capitalize(
-        name
-      )}Lazy = lazy(() => import("./components/${capitalize(name)}App")); \n`;
-      const updatedContent =
-        content.slice(0, appendIndex) +
-        content2Append +
-        content.slice(appendIndex);
-      tree.overwrite(
-        path,
-        prettier.format(updatedContent, { semi: true, parser: "babel" })
-      );
-    }
-
-    function updateAppWebPackDev(tree: Tree) {
-      const path = normalize("./container/config/webpack.dev.js");
-      const buffer = tree.read(path);
-      const content = buffer?.toString();
-      if (!content) {
-        throw new SchematicsException("webpack.dev.js not found");
-      }
-
-      const appendIndex = content.indexOf("// mfeRemotesEntries");
-      const content2Append = `${camelize(name)}: "${camelize(
-        name
-      )}@http://localhost:${port}/remoteEntry.js", \n`;
-      const updatedContent =
-        content.slice(0, appendIndex) +
-        content2Append +
-        content.slice(appendIndex);
-      tree.overwrite(
-        path,
-        prettier.format(updatedContent, { semi: true, parser: "babel" })
-      );
-    }
-
-    function updateAppWebPackProd(tree: Tree) {
-      const path = normalize("./container/config/webpack.prod.js");
-      const buffer = tree.read(path);
-      const content = buffer?.toString();
-      if (!content) {
-        throw new SchematicsException("webpack.prod.js not found");
-      }
-
-      const appendIndex = content.indexOf("// mfeRemotesEntries");
-      const content2Append = `${camelize(name)}: \`${camelize(
-        name
-      )}@\${${name}_domain}/remoteEntry.js\`, \n`;
-      const updatedContent =
-        content.slice(0, appendIndex) +
-        content2Append +
-        content.slice(appendIndex);
-      tree.overwrite(
-        path,
-        prettier.format(updatedContent, { semi: true, parser: "babel" })
-      );
-    }
+    updateFile("./container/src/App.js","</Switch>",`<Route path="/${name}" component={${capitalize(name)}Lazy} /> \n`);
+    updateFile("./container/src/App.js","const history",`const ${capitalize(name)}Lazy = lazy(() => import("./components/${capitalize(name)}App")); \n`);
+    updateFile("./container/config/webpack.dev.js","// mfeRemotesEntries",`${camelize(name)}: "${camelize(name)}@http://localhost:${port}/remoteEntry.js", \n`)
+    updateFile("./container/config/webpack.prod.js","// mfeRemotesEntries",`${camelize(name)}: \`${camelize(name)}@\${${name}_domain}/remoteEntry.js\`, \n`);
 
     function generateWrapper(): Rule {
       const templateSource = apply(url("./files/wrapper"), [
@@ -129,28 +74,9 @@ export function addMFE(_options: Schema): Rule {
         move(normalize("./container/src/components")),
       ]);
       return mergeWith(templateSource, MergeStrategy.Overwrite);
-    }
+    }  
 
-    function formatWrapper(): Rule {
-      return () => {
-        const path = `./container/src/components/${classify(name)}App.js`;
-        const content = tree.read(path);
-        if (content) {
-          const formatted = prettier.format(content.toString(), {
-            semi: true,
-            parser: "babel",
-          });
-          tree.overwrite(path, formatted);
-        }
-      };
-    }
-
-    updateAppRoute(tree);
-    updateAppWrapper(tree);
-    updateAppWebPackDev(tree);
-    updateAppWebPackProd(tree);
-
-    const rule = chain([generateWrapper, formatWrapper]);
+    const rule = chain([generateWrapper, formatFile(`./container/src/components/${classify(name)}App.js`)]);
     return rule(tree, _context) as Rule;
   };
 }

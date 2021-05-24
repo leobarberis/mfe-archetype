@@ -20,62 +20,34 @@ exports.newContainerMfe = newContainerMfe;
 function addMFE(_options) {
     return (tree, _context) => {
         const { name, port } = _options;
-        function updateAppRoute(tree) {
-            const path = core_1.normalize("./container/src/App.js");
-            const buffer = tree.read(path);
+        function formatFile(path) {
+            return () => {
+                const normPath = core_1.normalize(path);
+                const content = tree.read(normPath);
+                if (content) {
+                    const formatted = prettier.format(content.toString(), {
+                        semi: true,
+                        parser: "babel",
+                    });
+                    tree.overwrite(normPath, formatted);
+                }
+            };
+        }
+        function updateFile(path, appendRef, newContent) {
+            const normPath = core_1.normalize(path);
+            const buffer = tree.read(normPath);
             const content = buffer === null || buffer === void 0 ? void 0 : buffer.toString();
             if (!content) {
-                throw new schematics_1.SchematicsException("App.js not found");
+                throw new schematics_1.SchematicsException(`${path} not found`);
             }
-            const appendIndex = content.indexOf("</Switch>");
-            const content2Append = `<Route path="/${name}" component={${strings_1.capitalize(name)}Lazy} /> \n`;
-            const updatedContent = content.slice(0, appendIndex) +
-                content2Append +
-                content.slice(appendIndex);
-            tree.overwrite(path, prettier.format(updatedContent, { semi: true, parser: "babel" }));
+            const _appendIndex = content.indexOf(appendRef);
+            const updatedContent = content.slice(0, _appendIndex) + newContent + content.slice(_appendIndex);
+            tree.overwrite(normPath, prettier.format(updatedContent, { semi: true, parser: "babel" }));
         }
-        function updateAppWrapper(tree) {
-            const path = core_1.normalize("./container/src/App.js");
-            const buffer = tree.read(path);
-            const content = buffer === null || buffer === void 0 ? void 0 : buffer.toString();
-            if (!content) {
-                throw new schematics_1.SchematicsException("App.js not found");
-            }
-            const appendIndex = content.indexOf("const history");
-            const content2Append = `const ${strings_1.capitalize(name)}Lazy = lazy(() => import("./components/${strings_1.capitalize(name)}App")); \n`;
-            const updatedContent = content.slice(0, appendIndex) +
-                content2Append +
-                content.slice(appendIndex);
-            tree.overwrite(path, prettier.format(updatedContent, { semi: true, parser: "babel" }));
-        }
-        function updateAppWebPackDev(tree) {
-            const path = core_1.normalize("./container/config/webpack.dev.js");
-            const buffer = tree.read(path);
-            const content = buffer === null || buffer === void 0 ? void 0 : buffer.toString();
-            if (!content) {
-                throw new schematics_1.SchematicsException("webpack.dev.js not found");
-            }
-            const appendIndex = content.indexOf("// mfeRemotesEntries");
-            const content2Append = `${strings_1.camelize(name)}: "${strings_1.camelize(name)}@http://localhost:${port}/remoteEntry.js", \n`;
-            const updatedContent = content.slice(0, appendIndex) +
-                content2Append +
-                content.slice(appendIndex);
-            tree.overwrite(path, prettier.format(updatedContent, { semi: true, parser: "babel" }));
-        }
-        function updateAppWebPackProd(tree) {
-            const path = core_1.normalize("./container/config/webpack.prod.js");
-            const buffer = tree.read(path);
-            const content = buffer === null || buffer === void 0 ? void 0 : buffer.toString();
-            if (!content) {
-                throw new schematics_1.SchematicsException("webpack.prod.js not found");
-            }
-            const appendIndex = content.indexOf("// mfeRemotesEntries");
-            const content2Append = `${strings_1.camelize(name)}: \`${strings_1.camelize(name)}@\${${name}_domain}/remoteEntry.js\`, \n`;
-            const updatedContent = content.slice(0, appendIndex) +
-                content2Append +
-                content.slice(appendIndex);
-            tree.overwrite(path, prettier.format(updatedContent, { semi: true, parser: "babel" }));
-        }
+        updateFile("./container/src/App.js", "</Switch>", `<Route path="/${name}" component={${strings_1.capitalize(name)}Lazy} /> \n`);
+        updateFile("./container/src/App.js", "const history", `const ${strings_1.capitalize(name)}Lazy = lazy(() => import("./components/${strings_1.capitalize(name)}App")); \n`);
+        updateFile("./container/config/webpack.dev.js", "// mfeRemotesEntries", `${strings_1.camelize(name)}: "${strings_1.camelize(name)}@http://localhost:${port}/remoteEntry.js", \n`);
+        updateFile("./container/config/webpack.prod.js", "// mfeRemotesEntries", `${strings_1.camelize(name)}: \`${strings_1.camelize(name)}@\${${name}_domain}/remoteEntry.js\`, \n`);
         function generateWrapper() {
             const templateSource = schematics_1.apply(schematics_1.url("./files/wrapper"), [
                 schematics_1.template(Object.assign(Object.assign({}, _options), core_1.strings)),
@@ -83,24 +55,7 @@ function addMFE(_options) {
             ]);
             return schematics_1.mergeWith(templateSource, schematics_1.MergeStrategy.Overwrite);
         }
-        function formatWrapper() {
-            return () => {
-                const path = `./container/src/components/${strings_1.classify(name)}App.js`;
-                const content = tree.read(path);
-                if (content) {
-                    const formatted = prettier.format(content.toString(), {
-                        semi: true,
-                        parser: "babel",
-                    });
-                    tree.overwrite(path, formatted);
-                }
-            };
-        }
-        updateAppRoute(tree);
-        updateAppWrapper(tree);
-        updateAppWebPackDev(tree);
-        updateAppWebPackProd(tree);
-        const rule = schematics_1.chain([generateWrapper, formatWrapper]);
+        const rule = schematics_1.chain([generateWrapper, formatFile(`./container/src/components/${strings_1.classify(name)}App.js`)]);
         return rule(tree, _context);
     };
 }
