@@ -22,6 +22,16 @@ import {
 } from "@angular-devkit/core/src/utils/strings";
 const prettier = require("prettier");
 
+export function newContainerMfe(_options: Schema): Rule {
+  return (tree: Tree, _context: SchematicContext) => {
+    const container = newContainer(_options);
+    const mfe = newMfe(_options);
+    const addMfe = addMFE(_options);
+    const rule = chain([container, mfe, addMfe]);
+    return rule(tree, _context) as Rule;
+  };
+}
+
 export function addMFE(_options: Schema): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     const { name, port } = _options;

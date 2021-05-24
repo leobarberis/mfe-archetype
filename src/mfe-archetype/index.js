@@ -1,12 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newMfe = exports.newContainer = exports.addMFE = void 0;
+exports.newMfe = exports.newContainer = exports.addMFE = exports.newContainerMfe = void 0;
 const schematics_1 = require("@angular-devkit/schematics");
 const framework_1 = require("./framework");
 const core_1 = require("@angular-devkit/core");
 const tasks_1 = require("@angular-devkit/schematics/tasks");
 const strings_1 = require("@angular-devkit/core/src/utils/strings");
 const prettier = require("prettier");
+function newContainerMfe(_options) {
+    return (tree, _context) => {
+        const container = newContainer(_options);
+        const mfe = newMfe(_options);
+        const addMfe = addMFE(_options);
+        const rule = schematics_1.chain([container, mfe, addMfe]);
+        return rule(tree, _context);
+    };
+}
+exports.newContainerMfe = newContainerMfe;
 function addMFE(_options) {
     return (tree, _context) => {
         const { name, port } = _options;
