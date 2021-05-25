@@ -10,7 +10,7 @@ const gitignore_1 = require("./gitignore");
 const prettier = require("prettier");
 function newContainerMfe(_options) {
     return (tree, _context) => {
-        const container = newContainer(_options);
+        const container = tree.exists(core_1.normalize("./container/package.json")) ? () => { } : newContainer(_options);
         const mfe = newMfe(_options);
         const addMfe = addMFE(_options);
         const rule = schematics_1.chain([container, mfe, addMfe]);

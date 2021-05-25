@@ -26,7 +26,7 @@ const prettier = require("prettier");
 
 export function newContainerMfe(_options: Schema): Rule {
   return (tree: Tree, _context: SchematicContext) => {
-    const container = newContainer(_options);
+    const container = tree.exists(normalize("./container/package.json")) ? () => {} : newContainer(_options);
     const mfe = newMfe(_options);
     const addMfe = addMFE(_options);
     const rule = chain([container, mfe, addMfe]);

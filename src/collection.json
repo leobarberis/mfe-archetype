@@ -20,7 +20,7 @@
       "factory": "./mfe-archetype/index#deleteMFE",
       "schema": "./mfe-archetype/schema-delete-mfe.json"
     },
-    "new-container-mfe": {
+    "mfe": {
       "description": "Generate both container with mfe and integrate them",
       "factory": "./mfe-archetype/index#newContainerMfe",
       "schema": "./mfe-archetype/schema.json"
