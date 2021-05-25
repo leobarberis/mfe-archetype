@@ -19,7 +19,9 @@ import {
   camelize,
   capitalize,
   classify,
+  dasherize,
 } from "@angular-devkit/core/src/utils/strings";
+import { gitignore } from "./gitignore";
 const prettier = require("prettier");
 
 export function newContainerMfe(_options: Schema): Rule {
@@ -34,34 +36,56 @@ export function newContainerMfe(_options: Schema): Rule {
 
 export function deleteMFE(_options: Schema) {
   return (tree: Tree, _context: SchematicContext) => {
-    const { name, port } = _options; 
+    const { name, port } = _options;
 
     function deleteFromFile(path: string, oldContent: string) {
       const normPath = normalize(path);
       const buffer = tree.read(normPath);
       const content = buffer?.toString();
-      if(!content) {
+      if (!content) {
         throw new SchematicsException(`${path} not found`);
       }
 
-      const updatedContent = content.replace(oldContent, '');
-      tree.overwrite(normPath, prettier.format(updatedContent, { semi: true, parser: "babel" }));
+      const updatedContent = content.replace(oldContent, "");
+      tree.overwrite(
+        normPath,
+        prettier.format(updatedContent, { semi: true, parser: "babel" })
+      );
     }
 
-    deleteFromFile("./container/src/App.js",`<Route path="/${name}" component={${capitalize(name)}Lazy} />`);
-    deleteFromFile("./container/src/App.js",`const ${capitalize(name)}Lazy = lazy(() => import("./components/${capitalize(name)}App"));`);
-    deleteFromFile("./container/config/webpack.dev.js",`${camelize(name)}: "${camelize(name)}@http://localhost:${port}/remoteEntry.js",`)
-    deleteFromFile("./container/config/webpack.prod.js",`${camelize(name)}: \`${camelize(name)}@\${${name}_domain}/remoteEntry.js\`,`);
+    deleteFromFile(
+      "./container/src/App.js",
+      `<Route path="/${name}" component={${capitalize(name)}Lazy} />`
+    );
+    deleteFromFile(
+      "./container/src/App.js",
+      `const ${capitalize(
+        name
+      )}Lazy = lazy(() => import("./components/${capitalize(name)}App"));`
+    );
+    deleteFromFile(
+      "./container/config/webpack.dev.js",
+      `${camelize(name)}: "${camelize(
+        name
+      )}@http://localhost:${port}/remoteEntry.js",`
+    );
+    deleteFromFile(
+      "./container/config/webpack.prod.js",
+      `${camelize(name)}: \`${camelize(
+        name
+      )}@\${${name}_domain}/remoteEntry.js\`,`
+    );
 
-    const oldFilePath = normalize(`./container/src/components/${classify(name)}App.js`);
+    const oldFilePath = normalize(
+      `./container/src/components/${classify(name)}App.js`
+    );
     const oldFileBuffer = tree.read(oldFilePath);
-    if(!oldFileBuffer){
-      throw new SchematicsException(`${oldFilePath} not found`); 
+    if (!oldFileBuffer) {
+      throw new SchematicsException(`${oldFilePath} not found`);
     }
 
     tree.delete(oldFilePath);
-
-  }
+  };
 }
 
 export function addMFE(_options: Schema): Rule {
@@ -80,25 +104,53 @@ export function addMFE(_options: Schema): Rule {
           tree.overwrite(normPath, formatted);
         }
       };
-    } 
+    }
 
     function updateFile(path: string, appendRef: string, newContent: string) {
       const normPath = normalize(path);
       const buffer = tree.read(normPath);
       const content = buffer?.toString();
-      if(!content) {
+      if (!content) {
         throw new SchematicsException(`${path} not found`);
       }
 
       const _appendIndex = content.indexOf(appendRef);
-      const updatedContent = content.slice(0, _appendIndex) + newContent + content.slice(_appendIndex);
-      tree.overwrite(normPath, prettier.format(updatedContent, { semi: true, parser: "babel" }));
+      const updatedContent =
+        content.slice(0, _appendIndex) +
+        newContent +
+        content.slice(_appendIndex);
+      tree.overwrite(
+        normPath,
+        prettier.format(updatedContent, { semi: true, parser: "babel" })
+      );
     }
 
-    updateFile("./container/src/App.js","</Switch>",`<Route path="/${name}" component={${capitalize(name)}Lazy} /> \n`);
-    updateFile("./container/src/App.js","const history",`const ${capitalize(name)}Lazy = lazy(() => import("./components/${capitalize(name)}App")); \n`);
-    updateFile("./container/config/webpack.dev.js","// mfeRemotesEntries",`${camelize(name)}: "${camelize(name)}@http://localhost:${port}/remoteEntry.js", \n`)
-    updateFile("./container/config/webpack.prod.js","// mfeRemotesEntries",`${camelize(name)}: \`${camelize(name)}@\${${name}_domain}/remoteEntry.js\`, \n`);
+    updateFile(
+      "./container/src/App.js",
+      "</Switch>",
+      `<Route path="/${name}" component={${capitalize(name)}Lazy} /> \n`
+    );
+    updateFile(
+      "./container/src/App.js",
+      "const history",
+      `const ${capitalize(
+        name
+      )}Lazy = lazy(() => import("./components/${capitalize(name)}App")); \n`
+    );
+    updateFile(
+      "./container/config/webpack.dev.js",
+      "// mfeRemotesEntries",
+      `${camelize(name)}: "${camelize(
+        name
+      )}@http://localhost:${port}/remoteEntry.js", \n`
+    );
+    updateFile(
+      "./container/config/webpack.prod.js",
+      "// mfeRemotesEntries",
+      `${camelize(name)}: \`${camelize(
+        name
+      )}@\${${name}_domain}/remoteEntry.js\`, \n`
+    );
 
     function generateWrapper(): Rule {
       const templateSource = apply(url("./files/wrapper"), [
@@ -106,9 +158,12 @@ export function addMFE(_options: Schema): Rule {
         move(normalize("./container/src/components")),
       ]);
       return mergeWith(templateSource, MergeStrategy.Overwrite);
-    }  
+    }
 
-    const rule = chain([generateWrapper, formatFile(`./container/src/components/${classify(name)}App.js`)]);
+    const rule = chain([
+      generateWrapper,
+      formatFile(`./container/src/components/${classify(name)}App.js`),
+    ]);
     return rule(tree, _context) as Rule;
   };
 }
@@ -145,7 +200,12 @@ export function newMfe(_options: Schema): Rule {
     function generateMfe(): Rule {
       const templateSource = apply(
         url(`./files/${fw}/${routing ? "routing" : "no-routing"}`),
-        [template({ ..._options, ...strings })]
+        [
+          template({ ..._options, ...strings }),
+          () => {
+            tree.create(`./${dasherize(name)}/.gitignore`, gitignore);
+          },
+        ]
       );
       return mergeWith(templateSource, MergeStrategy.Overwrite);
     }
