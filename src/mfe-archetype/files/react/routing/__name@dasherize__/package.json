@@ -6,11 +6,11 @@
      "build": "webpack --config config/webpack.prod.js"
    },
   "dependencies": {
-    "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "^4.9.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "react-shadow-root": "^5.0.4",
+    "prop-types": "^15.7.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
