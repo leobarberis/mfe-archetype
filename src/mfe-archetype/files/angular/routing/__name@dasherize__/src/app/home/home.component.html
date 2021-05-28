@@ -1,17 +1,16 @@
-<div class="panel panel-default">
-  <div class="panel-heading"><%= classify(name) %></div>
-  <div class="panel-body">
-    <p>Welcome!</p>
-  </div>
-</div>
-
-<br />
-<div class="btn-group" role="group" aria-label="Carousel toggle controls">
-  <button
-    type="button"
-    (click)="navigate('/<%= name %>/page')"
-    class="btn btn-outline-dark btn-sm"
-  >
-    My Page
-  </button>
-</div>
+<mat-card class="example-card">
+  <mat-card-header>
+    <div mat-card-avatar class="example-header-image"></div>
+    <mat-card-title>Supervielle</mat-card-title>
+    <mat-card-subtitle>Home</mat-card-subtitle>
+  </mat-card-header>
+  <img mat-card-image src="https://bancosporinternet.com.ar/wp-content/uploads/2020/10/Banco-Supervielle-Home-Banking.jpg" alt="Photo of a Shiba Inu">
+  <mat-card-content>
+    <p>
+      Banco Supervielle es un entidad bancaria comercial de origen argentino, con sede en Buenos Aires. Supervielle surge de la fusión de Banco Banex y Société Générale de Argentina
+    </p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button (click)="navigate('/<%= name %>/page')">PAGE</button>
+  </mat-card-actions>
+</mat-card>

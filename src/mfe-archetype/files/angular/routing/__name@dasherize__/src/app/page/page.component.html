@@ -1,17 +1,16 @@
-<div class="panel panel-default">
-  <div class="panel-heading">My Page</div>
-  <div class="panel-body">
-    <p>Welcome to my Page!</p>
-  </div>
-</div>
-
-<br />
-<div class="btn-group" role="group" aria-label="Carousel toggle controls">
-  <button
-    type="button"
-    (click)="navigate('/<%= name %>')"
-    class="btn btn-outline-dark btn-sm"
-  >
-    Home
-  </button>
-</div>
+<mat-card class="example-card">
+  <mat-card-header>
+    <div mat-card-avatar class="example-header-image"></div>
+    <mat-card-title>Supervielle</mat-card-title>
+    <mat-card-subtitle>Page</mat-card-subtitle>
+  </mat-card-header>
+  <img mat-card-image src="https://bancospedia.com/wp-content/uploads/sitio-supervielle.jpg" alt="Photo of a Shiba Inu">
+  <mat-card-content>
+    <p>
+      En una era de mucho Banking, te vamos a seguir ofreciendo mucho más de Human
+    </p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button (click)="navigate('/<%= name %>')">HOME</button>
+  </mat-card-actions>
+</mat-card>

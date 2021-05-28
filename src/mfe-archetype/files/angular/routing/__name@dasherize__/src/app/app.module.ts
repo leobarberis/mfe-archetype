@@ -6,16 +6,17 @@ import { PageComponent } from './page/page.component';
 import { RoutingService } from './services/routing.service';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { APP_BASE_HREF } from '@angular/common';
+import {MatCardModule} from '@angular/material/card';
+
 
 @NgModule({
   declarations: [AppComponent, PageComponent, HomeComponent],
   imports: [
     BrowserAnimationsModule,
     AppRoutingModule,
-    CollapseModule.forRoot(),
     FormsModule,
+    MatCardModule
   ],
   providers: [RoutingService, { provide: APP_BASE_HREF, useValue: '/obe/' }],
   bootstrap: [],
