@@ -20,6 +20,8 @@
     "prettier": "^2.3.0"
   },
   "devDependencies": {
+    "@material-ui/core": "^4.11.4",
+    "@material-ui/icons": "^4.11.2",
     "@types/jasmine": "~3.5.0",
     "@types/node": "^12.11.1",
     "jasmine": "^3.5.0"

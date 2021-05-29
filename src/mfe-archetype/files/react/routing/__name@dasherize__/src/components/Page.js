@@ -1,17 +1,70 @@
 import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
+import Avatar from "@material-ui/core/Avatar";
+import Typography from "@material-ui/core/Typography";
 import { Link as RouterLink } from "react-router-dom";
+import Button from "@material-ui/core/Button";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    maxWidth: 345,
+  },
+  media: {
+    height: 0,
+    paddingTop: "56.25%", // 16:9
+  },
+  expand: {
+    transform: "rotate(0deg)",
+    marginLeft: "auto",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.shortest,
+    }),
+  },
+  expandOpen: {
+    transform: "rotate(180deg)",
+  },
+  avatar: {
+    backgroundSize: "cover",
+  },
+}));
 
 export default () => {
+  const classes = useStyles();
   return (
-    <div className="mdc-card mdc-card--outlined">
-      <h1>My Page!</h1>
-      <p>
+    <Card className={classes.root}>
+      <CardHeader
+        avatar={
+          <Avatar
+            src="https://pbs.twimg.com/profile_images/922849160826470400/PWLsCRyX_400x400.jpg"
+            className={classes.avatar}
+          />
+        }
+        title="Supervielle"
+        subheader="Page"
+      />
+      <CardMedia
+        className={classes.media}
+        image="http://www.e-softing.com.ar/images/supervielle-header.png"
+        title="Supervielle"
+      />
+      <CardContent>
+        <Typography variant="body2" color="textSecondary" component="p">
+          Productos y servicios ideados específicamente para que puedas vivir
+          como querés, en base a tus necesidades.
+        </Typography>
+      </CardContent>
+      <CardActions disableSpacing>
         <RouterLink style={{ textDecoration: "none" }} to="/<%= name %>">
-          <button className="mdc-button mdc-button--raised">
-            <span className="mdc-button__label">Home</span>
-          </button>
+          <Button variant="contained" size="small">
+            Home
+          </Button>
         </RouterLink>
-      </p>
-    </div>
+      </CardActions>
+    </Card>
   );
 };
