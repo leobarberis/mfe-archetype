@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.newMfe = exports.newContainer = exports.addMFE = exports.deleteMFE = exports.newContainerMfe = void 0;
 const schematics_1 = require("@angular-devkit/schematics");
-const framework_1 = require("./framework");
 const core_1 = require("@angular-devkit/core");
 const tasks_1 = require("@angular-devkit/schematics/tasks");
 const strings_1 = require("@angular-devkit/core/src/utils/strings");
@@ -10,7 +9,9 @@ const gitignore_1 = require("./gitignore");
 const prettier = require("prettier");
 function newContainerMfe(_options) {
     return (tree, _context) => {
-        const container = tree.exists(core_1.normalize("./container/package.json")) ? () => { } : newContainer(_options);
+        const container = tree.exists(core_1.normalize("./container/package.json"))
+            ? () => { }
+            : newContainer(_options);
         const mfe = newMfe(_options);
         const addMfe = addMFE(_options);
         const rule = schematics_1.chain([container, mfe, addMfe]);
@@ -103,7 +104,6 @@ function newContainer(_options) {
         function updateContainer(context) {
             return () => {
                 context.addTask(new tasks_1.NodePackageInstallTask({
-                    packageManager: "npm",
                     workingDirectory: "container",
                 }));
             };
@@ -126,19 +126,11 @@ function newMfe(_options) {
             return schematics_1.mergeWith(templateSource, schematics_1.MergeStrategy.Overwrite);
         }
         function updateMFE(context) {
-            return fw == framework_1.Framework.angular
-                ? () => {
-                    context.addTask(new tasks_1.NodePackageInstallTask({
-                        packageManager: "yarn",
-                        workingDirectory: name,
-                    }), []);
-                }
-                : () => {
-                    context.addTask(new tasks_1.NodePackageInstallTask({
-                        packageManager: "npm",
-                        workingDirectory: name,
-                    }), []);
-                };
+            return () => {
+                context.addTask(new tasks_1.NodePackageInstallTask({
+                    workingDirectory: name,
+                }), []);
+            };
         }
         const rule = schematics_1.chain([generateMfe, updateMFE(_context)]);
         return rule(tree, _context);

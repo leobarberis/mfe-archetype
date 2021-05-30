@@ -12,7 +12,6 @@ import {
   url,
 } from "@angular-devkit/schematics";
 import { Schema } from "./schema";
-import { Framework } from "./framework";
 import { normalize, strings } from "@angular-devkit/core";
 import { NodePackageInstallTask } from "@angular-devkit/schematics/tasks";
 import {
@@ -26,7 +25,9 @@ const prettier = require("prettier");
 
 export function newContainerMfe(_options: Schema): Rule {
   return (tree: Tree, _context: SchematicContext) => {
-    const container = tree.exists(normalize("./container/package.json")) ? () => {} : newContainer(_options);
+    const container = tree.exists(normalize("./container/package.json"))
+      ? () => {}
+      : newContainer(_options);
     const mfe = newMfe(_options);
     const addMfe = addMFE(_options);
     const rule = chain([container, mfe, addMfe]);
@@ -181,7 +182,6 @@ export function newContainer(_options: Schema): Rule {
       return () => {
         context.addTask(
           new NodePackageInstallTask({
-            packageManager: "npm",
             workingDirectory: "container",
           })
         );
@@ -211,25 +211,14 @@ export function newMfe(_options: Schema): Rule {
     }
 
     function updateMFE(context: SchematicContext): Rule {
-      return fw == Framework.angular
-        ? () => {
-            context.addTask(
-              new NodePackageInstallTask({
-                packageManager: "yarn",
-                workingDirectory: name,
-              }),
-              []
-            );
-          }
-        : () => {
-            context.addTask(
-              new NodePackageInstallTask({
-                packageManager: "npm",
-                workingDirectory: name,
-              }),
-              []
-            );
-          };
+      return () => {
+        context.addTask(
+          new NodePackageInstallTask({
+            workingDirectory: name,
+          }),
+          []
+        );
+      };
     }
 
     const rule = chain([generateMfe, updateMFE(_context)]);
