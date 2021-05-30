@@ -7,8 +7,15 @@ const tasks_1 = require("@angular-devkit/schematics/tasks");
 const strings_1 = require("@angular-devkit/core/src/utils/strings");
 const gitignore_1 = require("./gitignore");
 const prettier = require("prettier");
+const validatePort = (port) => {
+    if (!Number(port)) {
+        throw new schematics_1.SchematicsException("Invalid port");
+    }
+};
 function newContainerMfe(_options) {
     return (tree, _context) => {
+        const { port } = _options;
+        validatePort(port);
         const container = tree.exists(core_1.normalize("./container/package.json"))
             ? () => { }
             : newContainer(_options);
@@ -22,6 +29,7 @@ exports.newContainerMfe = newContainerMfe;
 function deleteMFE(_options) {
     return (tree, _context) => {
         const { name, port } = _options;
+        validatePort(port);
         function deleteFromFile(path, oldContent) {
             const normPath = core_1.normalize(path);
             const buffer = tree.read(normPath);
@@ -48,6 +56,7 @@ exports.deleteMFE = deleteMFE;
 function addMFE(_options) {
     return (tree, _context) => {
         const { name, port } = _options;
+        validatePort(port);
         function formatFile(path) {
             return () => {
                 const normPath = core_1.normalize(path);
@@ -115,7 +124,8 @@ function newContainer(_options) {
 exports.newContainer = newContainer;
 function newMfe(_options) {
     return (tree, _context) => {
-        const { fw, routing, name } = _options;
+        const { fw, routing, name, port } = _options;
+        validatePort(port);
         function generateMfe() {
             const templateSource = schematics_1.apply(schematics_1.url(`./files/${fw}/${routing ? "routing" : "no-routing"}`), [
                 schematics_1.template(Object.assign(Object.assign({}, _options), core_1.strings)),

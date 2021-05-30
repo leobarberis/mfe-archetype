@@ -1,34 +1,31 @@
 {
-    "$schema": "http://json-schema.org/schema",
-    "$id": "mfe-archetype-delete",
-    "title": "delete mfe from container",
-    "type": "object",
-    "description": "Delete MFE from Container",
-    "properties": {
-        "name": {
-            "type":"string",
-            "description": "The name of the mfe project",
-            "$default": {
-                "$source": "argv",
-                "index": 0
-            },
-            "x-prompt": "What is your mfe project name?"
-        },
-        "port": {
-            "type":"number",
-            "$default": {
-                "$source": "argv",
-                "index": 1
-            },
-            "description": "Development port",
-            "x-prompt": {
-                "message": "Which port does your MFE use for development?",
-                "type": "input"
-            }
-        }
+  "$schema": "http://json-schema.org/schema",
+  "$id": "mfe-archetype-delete",
+  "title": "delete mfe from container",
+  "type": "object",
+  "description": "Delete MFE from Container",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the mfe project",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What is your mfe project name?"
     },
-    "required": [
-        "name",
-        "port"
-    ]
+    "port": {
+      "type": "string",
+      "$default": {
+        "$source": "argv",
+        "index": 1
+      },
+      "default": "3000",
+      "x-prompt": {
+        "message": "Which port does your MFE use for development?",
+        "type": "input"
+      }
+    }
+  },
+  "required": ["name", "port"]
 }

@@ -1,68 +1,60 @@
 {
-    "$schema": "http://json-schema.org/schema",
-    "$id": "mfe-archetype-add",
-    "title": "add mfe",
-    "type": "object",
-    "description": "Add MFE to Container",
-    "properties": {
-        "name": {
-            "type":"string",
-            "description": "The name of the mfe project",
-            "$default": {
-                "$source": "argv",
-                "index": 0
-            },
-            "x-prompt": "What is your mfe project name?"
-        },
-        "fw": {
-            "type":"string",
-            "description": "Base MFE framework",
-            "$default": {
-                "$source": "argv",
-                "index": 1
-            },
-            "enum": [
-                "angular",
-                "react"
-            ],
-            "x-prompt": {
-                "message": "Which framework does your MFE use?",
-                "type:": "list",
-                "items": [
-                    { "value": "angular", "label": "angular"},
-                    { "value": "react", "label": "react"}
-                ]
-            }
-        },
-        "routing": {
-            "type": "boolean",
-            "$default": {
-                "$source": "argv",
-                "index": 2
-            },
-            "description": "Whether your MFE uses inner navigation or not",
-            "x-prompt": {
-                "message":"Does your MFE use inner navigation?",
-                "type": "confirmation"
-            }
-        },
-        "port": {
-            "type":"number",
-            "$default": {
-                "$source": "argv",
-                "index": 3
-            },
-            "description": "Development port",
-            "x-prompt": {
-                "message": "Which port does your MFE use for development?",
-                "type": "input"
-            }
-        }
+  "$schema": "http://json-schema.org/schema",
+  "$id": "mfe-archetype-add",
+  "title": "add mfe",
+  "type": "object",
+  "description": "Add MFE to Container",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the mfe project",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What is your mfe project name?"
     },
-    "required": [
-        "name",
-        "fw",
-        "routing",
-        "port"
-    ]
+    "fw": {
+      "type": "string",
+      "description": "Base MFE framework",
+      "$default": {
+        "$source": "argv",
+        "index": 3
+      },
+      "enum": ["angular", "react"],
+      "x-prompt": {
+        "message": "Which framework does your MFE use?",
+        "type:": "list",
+        "items": [
+          { "value": "angular", "label": "angular" },
+          { "value": "react", "label": "react" }
+        ]
+      }
+    },
+    "routing": {
+      "type": "boolean",
+      "$default": {
+        "$source": "argv",
+        "index": 2
+      },
+      "description": "Whether your MFE uses inner navigation or not",
+      "x-prompt": {
+        "message": "Does your MFE use inner navigation?",
+        "type": "confirmation"
+      }
+    },
+    "port": {
+      "type": "string",
+      "$default": {
+        "$source": "argv",
+        "index": 1
+      },
+      "default": "3000",
+      "x-prompt": {
+        "message": "Which port does your MFE use for development?",
+        "type": "input"
+      }
+    }
+  },
+  "required": ["name", "fw", "routing", "port"]
 }

@@ -23,8 +23,16 @@ import {
 import { gitignore } from "./gitignore";
 const prettier = require("prettier");
 
+const validatePort = (port: any) => {
+  if (!Number(port)) {
+    throw new SchematicsException("Invalid port");
+  }
+};
+
 export function newContainerMfe(_options: Schema): Rule {
   return (tree: Tree, _context: SchematicContext) => {
+    const { port } = _options;
+    validatePort(port);
     const container = tree.exists(normalize("./container/package.json"))
       ? () => {}
       : newContainer(_options);
@@ -38,6 +46,7 @@ export function newContainerMfe(_options: Schema): Rule {
 export function deleteMFE(_options: Schema) {
   return (tree: Tree, _context: SchematicContext) => {
     const { name, port } = _options;
+    validatePort(port);
 
     function deleteFromFile(path: string, oldContent: string) {
       const normPath = normalize(path);
@@ -92,7 +101,7 @@ export function deleteMFE(_options: Schema) {
 export function addMFE(_options: Schema): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     const { name, port } = _options;
-
+    validatePort(port);
     function formatFile(path: string): Rule {
       return () => {
         const normPath = normalize(path);
@@ -195,7 +204,8 @@ export function newContainer(_options: Schema): Rule {
 
 export function newMfe(_options: Schema): Rule {
   return (tree: Tree, _context: SchematicContext) => {
-    const { fw, routing, name } = _options;
+    const { fw, routing, name, port } = _options;
+    validatePort(port);
 
     function generateMfe(): Rule {
       const templateSource = apply(
