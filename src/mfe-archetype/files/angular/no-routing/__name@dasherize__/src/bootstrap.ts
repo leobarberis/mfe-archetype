@@ -1,5 +1,4 @@
 import 'zone.js/dist/zone';
-
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import {
@@ -7,6 +6,7 @@ import {
   enableProdMode,
   PlatformRef,
   isDevMode,
+  NgZone,
 } from '@angular/core';
 import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
@@ -25,9 +25,12 @@ function mount(el: HTMLElement) {
     .bootstrapModule(AppModule)
     .then((app) => {
       const appRef = app.injector.get(ApplicationRef);
+      const ngZoneRef = app.injector.get(NgZone);
       const factory =
         app.componentFactoryResolver.resolveComponentFactory(AppComponent);
-      appRef.bootstrap(factory, el);
+      ngZoneRef.run(() => {
+        appRef.bootstrap(factory, el);
+      });
       platformRef = app.injector.get(PlatformRef);
     });
   return {

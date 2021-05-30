@@ -2,8 +2,10 @@ import { Component, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  template: `<h1>Hello from <%= name %>!</h1>`,
+  templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  encapsulation: ViewEncapsulation.ShadowDom
+  encapsulation: ViewEncapsulation.ShadowDom,
 })
-export class AppComponent {}
+export class AppComponent {
+  panelOpenState = false;
+}

@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
-import { AppComponent } from './app.component';
 import { BrowserModule } from '@angular/platform-browser';
-import { APP_BASE_HREF } from '@angular/common';
+
+import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule],
-  providers: [{ provide: APP_BASE_HREF, useValue: '/obe/' }],
+  imports: [BrowserModule, BrowserAnimationsModule, MatExpansionModule],
+  providers: [],
   bootstrap: [],
 })
 export class AppModule {

@@ -55,8 +55,5 @@ yarn-error.log
 .ng_pkg_build/
 
 .nyc-output/
-
-#dev-container
-/container
 `;
 //# sourceMappingURL=gitignore.js.map
