@@ -1,28 +1,41 @@
-# Getting Started With Schematics
+# OBE: React & Angular MFE Schematics
 
-This repository is a basic Schematic implementation that serves as a starting point to create and publish Schematics to NPM.
+### Schematic implementation that allows you to create React & Angular MFEs in OBE
 
-### Testing
+## **Install Angular Schematics**
 
-To test locally, install `@angular-devkit/schematics-cli` globally and use the `schematics` command line tool. That tool acts the same as the `generate` command of the Angular CLI, but also has a debug mode.
+`$ npm install -g @angular-devkit/schematics-cli`
 
-Check the documentation with
-```bash
-schematics --help
-```
+### **Commands**
 
-### Unit Testing
+### **mfe**
 
-`npm run test` will run the unit tests, using Jasmine as a runner and test framework.
+`$ schematics mfe-archetype:mfe`
 
-### Publishing
+It creates a new mfe and adds it to the container configuration (if the container doesn't exists, it generates a new one)
 
-To publish, simply do:
+### **new-mfe**
 
-```bash
-npm run build
-npm publish
-```
+`$ schematics mfe-archetype:new-mfe`
 
-That's it!
- 
+It creates a new mfe without adds it to the container configuration
+
+### **add-mfe**
+
+`$ schematics mfe-archetype:add-mfe`
+
+It adds an existing mfe to an existing container configuration
+
+### **delete-mfe**
+
+`$ schematics mfe-archetype:delete-mfe`
+
+It deletes an existing mfe from an existing container configuration (It doesn't deletes the MFE itself, just the container config related to it)
+
+### **new-container**
+
+`$ schematics mfe-archetype:new-container`
+
+It creates a new container without any MFE attached to it
+
+[![](https://cdn.memegenerator.es/imagenes/memes/full/32/23/32234012.jpg)](https://cdn.memegenerator.es/imagenes/memes/full/32/23/32234012.jpg "NO ME LA CONTAINER")
