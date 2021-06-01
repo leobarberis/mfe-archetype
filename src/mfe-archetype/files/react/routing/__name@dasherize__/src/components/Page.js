@@ -31,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     backgroundSize: "cover",
   },
+  buttton: {
+    fontFamily: 'inherit',
+    fontSize: 'inherit',
+  },
 }));
 
 export default () => {
@@ -38,6 +42,8 @@ export default () => {
   return (
     <Card className={classes.root}>
       <CardHeader
+        titleTypographyProps={{variant: "inherit"}}
+        subheaderTypographyProps={{variant: "inherit"}}
         avatar={
           <Avatar
             src="https://pbs.twimg.com/profile_images/922849160826470400/PWLsCRyX_400x400.jpg"
@@ -53,14 +59,14 @@ export default () => {
         title="Supervielle"
       />
       <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
+        <Typography variant="inherit" color="textSecondary" component="p">
           Productos y servicios ideados específicamente para que puedas vivir
           como querés, en base a tus necesidades.
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
         <RouterLink style={{ textDecoration: "none" }} to="/<%= name %>">
-          <Button variant="contained" size="small">
+          <Button className={classes.buttton} variant="contained" size="small">
             Home
           </Button>
         </RouterLink>

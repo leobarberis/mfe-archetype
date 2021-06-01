@@ -10,10 +10,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
   },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
-  },
 }));
 
 export default () => {
@@ -27,10 +23,10 @@ export default () => {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography className={classes.heading}><%= classify(name) %></Typography>
+          <Typography variant="inherit"><%= classify(name) %></Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
+          <Typography variant="inherit">
               React MFE without routing sample
           </Typography>
         </AccordionDetails>

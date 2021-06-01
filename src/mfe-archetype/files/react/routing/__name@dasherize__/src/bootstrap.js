@@ -1,5 +1,7 @@
+import React from "react";
+import { render } from "react-dom";
 import { createMemoryHistory, createBrowserHistory } from "history";
-import { mountCustomElement } from "./services/mount";
+import App from "./App";
 
 const mount = (el, { onNavigate, defaultHistory, initialPath }) => {
   const history =
@@ -12,7 +14,7 @@ const mount = (el, { onNavigate, defaultHistory, initialPath }) => {
     history.listen(onNavigate);
   }
 
-  mountCustomElement(history, el);
+  render(<App history={history} />, el);
 
   return {
     onParentNavigate({ pathname: nextPathname }) {
