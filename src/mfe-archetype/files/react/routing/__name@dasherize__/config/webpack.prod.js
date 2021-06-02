@@ -7,7 +7,7 @@ const prodConfig = {
   mode: "production",
   output: {
     filename: "[name].[contenthash].js",
-    publicPath: `${<%= name %>_domain}/<%= name %>/latest/`,
+    publicPath: `${<%= camelize(name) %>_domain}/<%= name %>/latest/`,
   },
   plugins: [
     new ModuleFederationPlugin({

@@ -1,7 +1,7 @@
 {
   "name": "mfe-archetype",
-  "version": "1.1.0",
-  "description": "A blank schematics",
+  "version": "1.1.1",
+  "description": "mfe-archetype-sch",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "npm run build && jasmine src/**/*_spec.js",

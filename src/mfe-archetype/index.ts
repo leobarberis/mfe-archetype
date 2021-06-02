@@ -138,14 +138,14 @@ export function addMFE(_options: Schema): Rule {
     updateFile(
       "./container/src/App.js",
       "</Switch>",
-      `<Route path="/${name}" component={${capitalize(name)}Lazy} /> \n`
+      `<Route path="/${name}" component={${classify(name)}Lazy} /> \n`
     );
     updateFile(
       "./container/src/App.js",
       "const history",
-      `const ${capitalize(
+      `const ${classify(name)}Lazy = lazy(() => import("./components/${classify(
         name
-      )}Lazy = lazy(() => import("./components/${capitalize(name)}App")); \n`
+      )}App")); \n`
     );
     updateFile(
       "./container/config/webpack.dev.js",
@@ -159,7 +159,7 @@ export function addMFE(_options: Schema): Rule {
       "// mfeRemotesEntries",
       `${camelize(name)}: \`${camelize(
         name
-      )}@\${${name}_domain}/remoteEntry.js\`, \n`
+      )}@\${${camelize(name)}_domain}/remoteEntry.js\`, \n`
     );
 
     function generateWrapper(): Rule {
