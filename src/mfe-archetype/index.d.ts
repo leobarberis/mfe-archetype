@@ -4,4 +4,5 @@ export declare function newContainerMfe(_options: Schema): Rule;
 export declare function deleteMFE(_options: Schema): (tree: Tree, _context: SchematicContext) => void;
 export declare function addMFE(_options: Schema): Rule;
 export declare function newContainer(_options: Schema): Rule;
+export declare function newContainerDev(_options: Schema): Rule;
 export declare function newMfe(_options: Schema): Rule;

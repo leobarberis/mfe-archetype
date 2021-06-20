@@ -1,0 +1,6 @@
+{
+  "fw": "<%= fw %>",
+  "routing": "<%= routing %>",
+  "name": "<%= name %>",
+  "port": "<%= port %>"
+}

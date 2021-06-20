@@ -202,6 +202,30 @@ export function newContainer(_options: Schema): Rule {
   };
 }
 
+export function newContainerDev(_options: Schema): Rule {
+  return (tree: Tree, _context: SchematicContext) => {
+    function generateContainer(): Rule {
+      const templateSource = apply(url("./files/container-dev"), [
+        template({ ..._options, ...strings }),
+      ]);
+      return mergeWith(templateSource, MergeStrategy.Overwrite);
+    }
+
+    function updateContainerDev(context: SchematicContext): Rule {
+      return () => {
+        context.addTask(
+          new NodePackageInstallTask({
+            workingDirectory: "container",
+          })
+        );
+      };
+    }
+
+    const rule = chain([generateContainer, updateContainerDev(_context)]);
+    return rule(tree, _context) as Rule;
+  };
+}
+
 export function newMfe(_options: Schema): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     const { fw, routing, name, port } = _options;
