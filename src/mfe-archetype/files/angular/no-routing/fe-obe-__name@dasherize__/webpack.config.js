@@ -10,7 +10,7 @@ sharedMappings.register(path.join(__dirname, "tsconfig.json"), [
 
 module.exports = {
   output: {
-    uniqueName: "<%= name %>",
+    uniqueName: "fe-obe-<%= name %>",
     publicPath: "auto",
   },
   optimization: {

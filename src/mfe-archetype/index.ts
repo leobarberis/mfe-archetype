@@ -213,7 +213,7 @@ export function newMfe(_options: Schema): Rule {
         [
           template({ ..._options, ...strings }),
           () => {
-            tree.create(`./${dasherize(name)}/.gitignore`, gitignore);
+            tree.create(`./fe-obe-${dasherize(name)}/.gitignore`, gitignore);
           },
         ]
       );
@@ -224,7 +224,7 @@ export function newMfe(_options: Schema): Rule {
       return () => {
         context.addTask(
           new NodePackageInstallTask({
-            workingDirectory: name,
+            workingDirectory: `fe-obe-${dasherize(name)}`,
           }),
           []
         );

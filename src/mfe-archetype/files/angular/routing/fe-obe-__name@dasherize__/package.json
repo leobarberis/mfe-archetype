@@ -1,10 +1,10 @@
 {
-  "name": "<%= name %>",
+  "name": "fe-obe-<%= name %>",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --prod",
+    "build": "ng build",
     "test": "ng test",
     "watch": "ng build --watch --configuration development",
     "run:all": "node node_modules/@angular-architects/module-federation/src/server/mf-dev-server.js"

@@ -4,7 +4,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "<%= name %>": {
+    "fe-obe-<%= name %>": {
       "projectType": "application",
       "schematics": { "@schematics/angular:application": { "strict": true } },
       "root": "",
@@ -14,7 +14,7 @@
         "build": {
           "builder": "ngx-build-plus:browser",
           "options": {
-            "outputPath": "dist/<%= name %>",
+            "outputPath": "dist/fe-obe-<%= name %>",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -63,17 +63,17 @@
           "builder": "ngx-build-plus:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "<%= name %>:build:production",
+              "browserTarget": "fe-obe-<%= name %>:build:production",
               "extraWebpackConfig": "webpack.prod.config.js"
             },
-            "development": { "browserTarget": "<%= name %>:build:development" }
+            "development": { "browserTarget": "fe-obe-<%= name %>:build:development" }
           },
           "defaultConfiguration": "development",
           "options": { "extraWebpackConfig": "webpack.config.js", "port": <%= port %> }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": { "browserTarget": "<%= name %>:build" }
+          "options": { "browserTarget": "fe-obe-<%= name %>:build" }
         },
         "test": {
           "builder": "ngx-build-plus:karma",
@@ -91,5 +91,5 @@
       }
     }
   },
-  "defaultProject": "<%= name %>"
+  "defaultProject": "fe-obe-<%= name %>"
 }

@@ -130,7 +130,7 @@ function newMfe(_options) {
             const templateSource = schematics_1.apply(schematics_1.url(`./files/${fw}/${routing ? "routing" : "no-routing"}`), [
                 schematics_1.template(Object.assign(Object.assign({}, _options), core_1.strings)),
                 () => {
-                    tree.create(`./${strings_1.dasherize(name)}/.gitignore`, gitignore_1.gitignore);
+                    tree.create(`./fe-obe-${strings_1.dasherize(name)}/.gitignore`, gitignore_1.gitignore);
                 },
             ]);
             return schematics_1.mergeWith(templateSource, schematics_1.MergeStrategy.Overwrite);
@@ -138,7 +138,7 @@ function newMfe(_options) {
         function updateMFE(context) {
             return () => {
                 context.addTask(new tasks_1.NodePackageInstallTask({
-                    workingDirectory: name,
+                    workingDirectory: `fe-obe-${strings_1.dasherize(name)}`,
                 }), []);
             };
         }

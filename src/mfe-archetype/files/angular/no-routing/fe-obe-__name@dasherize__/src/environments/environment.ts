@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  styles: "http://localhost:3000/"
+  styles: "http://localhost:<%= port %>/"
 };
 
 /*
