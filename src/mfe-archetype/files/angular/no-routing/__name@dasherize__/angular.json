@@ -45,7 +45,7 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "outputHashing": "all",
+              "outputHashing": "none",
               "extraWebpackConfig": "webpack.prod.config.js"
             },
             "development": {

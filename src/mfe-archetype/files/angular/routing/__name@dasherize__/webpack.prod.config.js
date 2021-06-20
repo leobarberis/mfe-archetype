@@ -4,8 +4,8 @@ const commonConfig = require("./webpack.config");
 const prodConfig = {
   mode: "production",
   output: {
-    filename: "[name].[contenthash].js",
-    publicPath: `${<%= camelize(name) %>_domain}/<%= name %>/latest/`,
+    filename: "[name].js",
+    publicPath: "auto",
   },
 };
 

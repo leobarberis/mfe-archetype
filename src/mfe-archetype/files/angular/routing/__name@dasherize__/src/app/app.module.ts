@@ -3,7 +3,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { PageComponent } from './page/page.component';
-import { RoutingService } from './services/routing.service';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { APP_BASE_HREF } from '@angular/common';
@@ -19,7 +18,7 @@ import { BrowserModule } from '@angular/platform-browser';
     FormsModule,
     MatCardModule,
   ],
-  providers: [RoutingService, { provide: APP_BASE_HREF, useValue: '/obe/' }],
+  providers: [{ provide: APP_BASE_HREF, useValue: '/obe/' }],
   bootstrap: [],
 })
 export class AppModule {
