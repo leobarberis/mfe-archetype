@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+data:
+  settings.json: |
+    {
+    }
+kind: ConfigMap
+metadata:
+  name: {{ (ds "properties").APP_NAME }}-cm
+  namespace: {{ (ds "properties").NAMESPACE }}

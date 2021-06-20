@@ -1,0 +1,93 @@
+services:
+  - name: docker-spv.artifactory.gscorp.ad/docker-dind:latest
+    alias: docker
+
+variables:
+  APP_NAME: fe-obe-<%= name %>
+  REPO_NAME: online-banking-empresas
+  BUILD_GROUP: snapshot
+  RESOURCE_PATH: .
+  GROUP_ID: ar/com/supervielle
+  REPO_GENERIC: ${REPO_NAME}-generic-local
+  REPO_DOCKER: $REPO_NAME.artifactory.gscorp.ad
+  REPO_SPV: docker-spv.artifactory.gscorp.ad
+  DOCKER_DRIVER: overlay2
+  DOCKER_HOST: tcp://localhost:2375
+  DOCKER_TLS_CERTDIR: ''
+  SONAR_HOST_URL: "https://sonarqubede.gscorp.ad"
+  DOCKERFILE: .
+
+before_script:
+    - export BUILD_VERSION=$(cat package.json | grep \"version\" | cut -d "\"" -f4)
+
+stages:
+  - CodeQuality
+  - Build
+  - Package
+  - Deploy
+  - Release
+
+Code Quality Angular:
+  image: docker-spv.artifactory.gscorp.ad/sonarscanner-nodejs-spv:1.0.2
+  stage: CodeQuality
+  script:
+    - npm install --no-optional
+    - npm run-script build
+    - npm run-script coverage --if-present
+    - sonar-scanner -Dsonar.projectKey=${APP_NAME_SONAR} -Dsonar.qualitygate.wait=${QUALITY_GATE_SONAR} -Dsonar.sources=. -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_TOKEN}
+  rules:
+    - if: '$LANG == "angular"'
+
+Build Angular:
+  image: docker-spv.artifactory.gscorp.ad/angular-cli-spv:12.0.3
+  stage: Build
+  script:
+    - npm install --no-optional
+    - npm run-script build
+  artifacts:
+    paths:
+      - dist/*
+    expire_in: 1 day
+    reports:
+      junit: dist/test-results/test/TEST-*.xml
+  rules:
+    - if: '$LANG == "angular"'
+
+# TODO: Refinar workflow de test de aceptación
+#Push Latest:
+#  image: docker-spv.artifactory.gscorp.ad/docker-jfrog:1.0.0
+#  stage: Push Latest
+#  script:
+#      - docker login docker-spv.artifactory.gscorp.ad -u $ARTIFACTORY_USER -p $ARTIFACTORY_PASS
+#      - docker login online-banking-empresas.artifactory.gscorp.ad -u $ARTIFACTORY_USER -p $ARTIFACTORY_PASS
+#      - docker pull ${REPO_DOCKER}/snapshot/${APP_NAME}:${BUILD_VERSION}
+#      - docker tag ${REPO_DOCKER}/snapshot/${APP_NAME}:${BUILD_VERSION} ${REPO_DOCKER}/snapshot/${APP_NAME}:latest
+#      - docker push ${REPO_DOCKER}/snapshot/${APP_NAME}:latest
+#  rules:
+#    - if: '$GITFLOW != "true"'
+#    - if: '$GITFLOW == "true" && $CI_COMMIT_TAG != null'
+#    - if: '$GITFLOW == "true" && $CI_COMMIT_BRANCH == "develop"'
+#    - if: '$GITFLOW == "true" && $CI_COMMIT_BRANCH =~ /^hotfix-.*/'
+
+#Acceptance Test:
+#  stage: Acceptance Test
+#  trigger:
+#    project: desarrollo/online-banking-empresas/completarConUbicacion #Debe apuntar al pipeline del test de aceptación para este proyecto
+#    branch: master
+#    strategy: depend
+#  rules:
+#    - if: '$GITFLOW != "true"'
+#    - if: '$GITFLOW == "true" && $CI_COMMIT_TAG != null'
+#    - if: '$GITFLOW == "true" && $CI_COMMIT_BRANCH == "develop"'
+#    - if: '$GITFLOW == "true" && $CI_COMMIT_BRANCH =~ /^hotfix-.*/'
+
+include:
+  - project: "gitlab-ci-templates/kubernetes"
+    ref: "master"
+    file: ".package.yml"
+  - project: "gitlab-ci-templates/kubernetes"
+    ref: "master"
+    file: ".deploy.yml"
+  - project: "gitlab-ci-templates/kubernetes"
+    ref: "master"
+    file: ".release.yml"
