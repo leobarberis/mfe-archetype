@@ -10,9 +10,10 @@
       "description": "Container Generation",
       "factory": "./mfe-archetype/index#newContainer"
     },    
-    "new-container-dev": {
+    "build-container": {
       "description": "Container Dev Generation",
-      "factory": "./mfe-archetype/index#newContainerDev"
+      "factory": "./mfe-archetype/index#buildContainer",
+      "schema": "./mfe-archetype/schema-container.json"
     },
     "add-mfe": {
       "description": "Add MFE to Container",

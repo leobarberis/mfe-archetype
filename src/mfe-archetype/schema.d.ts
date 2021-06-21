@@ -3,4 +3,5 @@ export interface Schema {
   fw: string; //Framework
   routing: boolean;
   port: string;
+  env: string;
 }

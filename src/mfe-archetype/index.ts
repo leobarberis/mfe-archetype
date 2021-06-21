@@ -188,29 +188,16 @@ export function newContainer(_options: Schema): Rule {
   };
 }
 
-export function newContainerDev(_options: Schema): Rule {
+export function buildContainer(_options: Schema): Rule {
   return (tree: Tree, _context: SchematicContext) => {
-    const { port } = _options;
+    const { port, env } = _options;
     validatePort(port);
-    function generateContainer(): Rule {
-      const templateSource = apply(url("./files/container-dev"), [
-        template({ ..._options, ...strings }),
-      ]);
-      return mergeWith(templateSource, MergeStrategy.Overwrite);
+    if(env == "dev") {
+      const container = newContainer(_options);
+      const addMfe = addMFE(_options);
+      const rule = chain([container, addMfe]);
+      return rule(tree, _context) as Rule;
     }
-
-    function updateContainerDev(context: SchematicContext): Rule {
-      return () => {
-        context.addTask(
-          new NodePackageInstallTask({
-            workingDirectory: "container",
-          })
-        );
-      };
-    }
-    const addMfe = addMFE(_options);
-    const rule = chain([generateContainer, updateContainerDev(_context), addMfe]);
-    return rule(tree, _context) as Rule;
   };
 }
 

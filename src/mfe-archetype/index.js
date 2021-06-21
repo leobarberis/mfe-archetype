@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newMfe = exports.newContainerDev = exports.newContainer = exports.addMFE = exports.deleteMFE = void 0;
+exports.newMfe = exports.buildContainer = exports.newContainer = exports.addMFE = exports.deleteMFE = void 0;
 const schematics_1 = require("@angular-devkit/schematics");
 const core_1 = require("@angular-devkit/core");
 const tasks_1 = require("@angular-devkit/schematics/tasks");
@@ -108,29 +108,19 @@ function newContainer(_options) {
     };
 }
 exports.newContainer = newContainer;
-function newContainerDev(_options) {
+function buildContainer(_options) {
     return (tree, _context) => {
-        const { port } = _options;
+        const { port, env } = _options;
         validatePort(port);
-        function generateContainer() {
-            const templateSource = schematics_1.apply(schematics_1.url("./files/container-dev"), [
-                schematics_1.template(Object.assign(Object.assign({}, _options), core_1.strings)),
-            ]);
-            return schematics_1.mergeWith(templateSource, schematics_1.MergeStrategy.Overwrite);
+        if (env == "dev") {
+            const container = newContainer(_options);
+            const addMfe = addMFE(_options);
+            const rule = schematics_1.chain([container, addMfe]);
+            return rule(tree, _context);
         }
-        function updateContainerDev(context) {
-            return () => {
-                context.addTask(new tasks_1.NodePackageInstallTask({
-                    workingDirectory: "container",
-                }));
-            };
-        }
-        const addMfe = addMFE(_options);
-        const rule = schematics_1.chain([generateContainer, updateContainerDev(_context), addMfe]);
-        return rule(tree, _context);
     };
 }
-exports.newContainerDev = newContainerDev;
+exports.buildContainer = buildContainer;
 function newMfe(_options) {
     return (tree, _context) => {
         const { fw, routing, name, port } = _options;
