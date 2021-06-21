@@ -12,8 +12,7 @@
     },    
     "build-container": {
       "description": "Container Dev Generation",
-      "factory": "./mfe-archetype/index#buildContainer",
-      "schema": "./mfe-archetype/schema-container.json"
+      "factory": "./mfe-archetype/index#buildContainer"
     },
     "add-mfe": {
       "description": "Add MFE to Container",
