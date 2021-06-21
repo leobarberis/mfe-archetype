@@ -7,7 +7,7 @@ const prodConfig = {
   mode: "production",
   output: {
     filename: "[name].js",
-    publicPath: `${container_domain}/container/latest/`,
+    publicPath: "auto",
   },
   plugins: [
     new ModuleFederationPlugin({

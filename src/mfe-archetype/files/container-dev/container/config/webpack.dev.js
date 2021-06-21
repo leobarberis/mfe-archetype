@@ -6,12 +6,12 @@ const packageJson = require("../package.json");
 const devConfig = {
   mode: "development",
   output: {
-    publicPath: "http://0.0.0.0:3008/",
+    publicPath: "http://127.0.0.1:3008/",
   },
   devServer: {
     port: "3008",
-    host: "0.0.0.0",
-    public: "0.0.0.0:3008",
+    host: "127.0.0.1",
+    public: "127.0.0.1:3008",
     disableHostCheck: true,
     historyApiFallback: true,
   },
