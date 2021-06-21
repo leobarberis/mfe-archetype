@@ -124,6 +124,8 @@ function newContainer(_options) {
 exports.newContainer = newContainer;
 function newContainerDev(_options) {
     return (tree, _context) => {
+        const { port } = _options;
+        validatePort(port);
         function generateContainer() {
             const templateSource = schematics_1.apply(schematics_1.url("./files/container-dev"), [
                 schematics_1.template(Object.assign(Object.assign({}, _options), core_1.strings)),
@@ -137,7 +139,8 @@ function newContainerDev(_options) {
                 }));
             };
         }
-        const rule = schematics_1.chain([generateContainer, updateContainerDev(_context)]);
+        const addMfe = addMFE(_options);
+        const rule = schematics_1.chain([generateContainer, updateContainerDev(_context), addMfe]);
         return rule(tree, _context);
     };
 }

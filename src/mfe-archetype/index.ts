@@ -204,6 +204,8 @@ export function newContainer(_options: Schema): Rule {
 
 export function newContainerDev(_options: Schema): Rule {
   return (tree: Tree, _context: SchematicContext) => {
+    const { port } = _options;
+    validatePort(port);
     function generateContainer(): Rule {
       const templateSource = apply(url("./files/container-dev"), [
         template({ ..._options, ...strings }),
@@ -220,8 +222,8 @@ export function newContainerDev(_options: Schema): Rule {
         );
       };
     }
-
-    const rule = chain([generateContainer, updateContainerDev(_context)]);
+    const addMfe = addMFE(_options);
+    const rule = chain([generateContainer, updateContainerDev(_context), addMfe]);
     return rule(tree, _context) as Rule;
   };
 }
