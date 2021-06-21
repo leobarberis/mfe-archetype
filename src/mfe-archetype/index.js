@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newMfe = exports.newContainerDev = exports.newContainer = exports.addMFE = exports.deleteMFE = exports.newContainerMfe = void 0;
+exports.newMfe = exports.newContainerDev = exports.newContainer = exports.addMFE = exports.deleteMFE = void 0;
 const schematics_1 = require("@angular-devkit/schematics");
 const core_1 = require("@angular-devkit/core");
 const tasks_1 = require("@angular-devkit/schematics/tasks");
@@ -12,20 +12,6 @@ const validatePort = (port) => {
         throw new schematics_1.SchematicsException("Invalid port");
     }
 };
-function newContainerMfe(_options) {
-    return (tree, _context) => {
-        const { port } = _options;
-        validatePort(port);
-        const container = tree.exists(core_1.normalize("./container/package.json"))
-            ? () => { }
-            : newContainer(_options);
-        const mfe = newMfe(_options);
-        const addMfe = addMFE(_options);
-        const rule = schematics_1.chain([container, mfe, addMfe]);
-        return rule(tree, _context);
-    };
-}
-exports.newContainerMfe = newContainerMfe;
 function deleteMFE(_options) {
     return (tree, _context) => {
         const { name, port } = _options;

@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
-    "new-mfe": {
+    "mfe": {
       "description": "MFE Generation",
       "factory": "./mfe-archetype/index#newMfe",
       "schema": "./mfe-archetype/schema.json"
@@ -23,11 +23,6 @@
       "description": "Delete MFE from Container",
       "factory": "./mfe-archetype/index#deleteMFE",
       "schema": "./mfe-archetype/schema-delete-mfe.json"
-    },
-    "mfe": {
-      "description": "Generate both container with mfe and integrate them",
-      "factory": "./mfe-archetype/index#newContainerMfe",
-      "schema": "./mfe-archetype/schema.json"
     }
   }
 }

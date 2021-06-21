@@ -29,20 +29,6 @@ const validatePort = (port: any) => {
   }
 };
 
-export function newContainerMfe(_options: Schema): Rule {
-  return (tree: Tree, _context: SchematicContext) => {
-    const { port } = _options;
-    validatePort(port);
-    const container = tree.exists(normalize("./container/package.json"))
-      ? () => {}
-      : newContainer(_options);
-    const mfe = newMfe(_options);
-    const addMfe = addMFE(_options);
-    const rule = chain([container, mfe, addMfe]);
-    return rule(tree, _context) as Rule;
-  };
-}
-
 export function deleteMFE(_options: Schema) {
   return (tree: Tree, _context: SchematicContext) => {
     const { name, port } = _options;
