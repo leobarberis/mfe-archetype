@@ -1,6 +1,6 @@
 {
   "name": "mfe-archetype",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "mfe-archetype-sch",
   "scripts": {
     "build": "tsc -p tsconfig.json",
