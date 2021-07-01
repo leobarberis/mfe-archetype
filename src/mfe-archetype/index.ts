@@ -86,7 +86,7 @@ export function deleteMFE(_options: Schema) {
 
 export function addMFE(_options: Schema): Rule {
   return (tree: Tree, _context: SchematicContext) => {
-    const { name, port } = _options;
+    const { name, port, route} = _options;
     validatePort(port);
     function formatFile(path: string): Rule {
       return () => {
@@ -124,7 +124,7 @@ export function addMFE(_options: Schema): Rule {
     updateFile(
       "./container/src/App.js",
       "</Switch>",
-      `<Route path="/${name}" component={${classify(name)}Lazy} /> \n`
+      `<Route path="/${route}" component={${classify(name)}Lazy} /> \n`
     );
     updateFile(
       "./container/src/App.js",

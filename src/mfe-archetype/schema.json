@@ -49,8 +49,19 @@
         "message": "Which port do you want for development?",
         "type": "input"
       }
+    },
+    "route": {
+      "type": "string",
+      "$default": {
+        "$source": "argv",
+        "index": 4
+      },
+      "x-prompt": {
+        "message": "Which route will your MFE render with?",
+        "type": "input"
+      }
     }
   },
-  "required": ["name", "fw", "routing", "port"],
+  "required": ["name", "fw", "routing", "port", "route"],
   "additionalProperties": false
 }

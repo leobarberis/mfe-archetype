@@ -5,11 +5,11 @@ import { PageComponent } from './page/page.component';
 
 const routes: Routes = [
   {
-    path: '<%= name %>/page',
+    path: '<%= route %>/page',
     component: PageComponent,
   },
   {
-    path: '<%= name %>',
+    path: '<%= route %>',
     component: HomeComponent,
     pathMatch: 'full',
   },

@@ -65,7 +65,7 @@ export default () => {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <RouterLink style={{ textDecoration: "none" }} to="/<%= name %>">
+        <RouterLink style={{ textDecoration: "none" }} to="/<%= route %>">
           <Button className={classes.buttton} variant="contained" size="small">
             Home
           </Button>

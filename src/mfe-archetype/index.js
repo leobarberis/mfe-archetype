@@ -41,7 +41,7 @@ function deleteMFE(_options) {
 exports.deleteMFE = deleteMFE;
 function addMFE(_options) {
     return (tree, _context) => {
-        const { name, port } = _options;
+        const { name, port, route } = _options;
         validatePort(port);
         function formatFile(path) {
             return () => {
@@ -69,7 +69,7 @@ function addMFE(_options) {
                 content.slice(_appendIndex);
             tree.overwrite(normPath, prettier.format(updatedContent, { semi: true, parser: "babel" }));
         }
-        updateFile("./container/src/App.js", "</Switch>", `<Route path="/${name}" component={${strings_1.classify(name)}Lazy} /> \n`);
+        updateFile("./container/src/App.js", "</Switch>", `<Route path="/${route}" component={${strings_1.classify(name)}Lazy} /> \n`);
         updateFile("./container/src/App.js", "const history", `const ${strings_1.classify(name)}Lazy = lazy(() => import("./components/${strings_1.classify(name)}App")); \n`);
         updateFile("./container/config/webpack.dev.js", "// mfeRemotesEntries", `${strings_1.camelize(name)}: "${strings_1.camelize(name)}@http://localhost:${port}/remoteEntry.js", \n`);
         updateFile("./container/config/webpack.prod.js", "// mfeRemotesEntries", `${strings_1.camelize(name)}: \`${strings_1.camelize(name)}@\${${strings_1.camelize(name)}_domain}/remoteEntry.js\`, \n`);

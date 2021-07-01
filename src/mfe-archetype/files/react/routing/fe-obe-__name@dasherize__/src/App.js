@@ -9,9 +9,9 @@ export default ({ history }) => {
   return (
     <Router history={history}>
       <Switch>
-        <Route exact path="/<%= name %>" component={Home} />
-        <Route exact path="/<%= name %>/page" component={Page} />
-        <Route>{devRoot && <Redirect to="/<%= name %>" />}</Route>
+        <Route exact path="/<%= route %>" component={Home} />
+        <Route exact path="/<%= route %>/page" component={Page} />
+        <Route>{devRoot && <Redirect to="/<%= route %>" />}</Route>
       </Switch>
     </Router>
   );
