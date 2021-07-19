@@ -297,7 +297,7 @@ export function addMFEObe(_options: Schema): Rule {
       "// mfeRemotesEntries",
       `${camelize(name)}: \`${camelize(
         name
-      )}@obe/modulos/${name}/remoteEntry.js\`, \n`
+      )}@/obe/modulos/${name}/remoteEntry.js\`, \n`
     );
 
     function generateWrapper(): Rule {

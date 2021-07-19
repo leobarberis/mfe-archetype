@@ -179,7 +179,7 @@ function addMFEObe(_options) {
         updateFile("./fe-obe-container/src/App.js", "</Switch>", `<Route path="/${route}" component={${strings_1.classify(name)}Lazy} /> \n`);
         updateFile("./fe-obe-container/src/App.js", "const history", `const ${strings_1.classify(name)}Lazy = lazy(() => import("./components/${strings_1.classify(name)}App")); \n`);
         updateFile("./fe-obe-container/config/webpack.dev.js", "// mfeRemotesEntries", `${strings_1.camelize(name)}: "${strings_1.camelize(name)}@http://localhost:${port}/remoteEntry.js", \n`);
-        updateFile("./fe-obe-container/config/webpack.prod.js", "// mfeRemotesEntries", `${strings_1.camelize(name)}: \`${strings_1.camelize(name)}@obe/modulos/${name}/remoteEntry.js\`, \n`);
+        updateFile("./fe-obe-container/config/webpack.prod.js", "// mfeRemotesEntries", `${strings_1.camelize(name)}: \`${strings_1.camelize(name)}@/obe/modulos/${name}/remoteEntry.js\`, \n`);
         function generateWrapper() {
             const templateSource = schematics_1.apply(schematics_1.url("./files/wrapper"), [
                 schematics_1.template(Object.assign(Object.assign({}, _options), core_1.strings)),
