@@ -18,7 +18,12 @@
       "description": "Add MFE to Container",
       "factory": "./mfe-archetype/index#addMFE",
       "schema": "./mfe-archetype/schema-add-mfe.json"
-    },    
+    },
+    "add-mfe-obe": {
+      "description": "Add MFE to Container",
+      "factory": "./mfe-archetype/index#addMFEObe",
+      "schema": "./mfe-archetype/schema-add-mfe.json"
+    },      
     "delete-mfe": {
       "description": "Delete MFE from Container",
       "factory": "./mfe-archetype/index#deleteMFE",

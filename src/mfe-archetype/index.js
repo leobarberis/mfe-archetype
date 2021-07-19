@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newMfe = exports.buildContainer = exports.newContainer = exports.addMFE = exports.deleteMFE = void 0;
+exports.addMFEObe = exports.newMfe = exports.buildContainer = exports.newContainer = exports.addMFE = exports.deleteMFE = void 0;
 const schematics_1 = require("@angular-devkit/schematics");
 const core_1 = require("@angular-devkit/core");
 const tasks_1 = require("@angular-devkit/schematics/tasks");
@@ -146,4 +146,53 @@ function newMfe(_options) {
     };
 }
 exports.newMfe = newMfe;
+function addMFEObe(_options) {
+    return (tree, _context) => {
+        const { name, port, route } = _options;
+        validatePort(port);
+        function formatFile(path) {
+            return () => {
+                const normPath = core_1.normalize(path);
+                const content = tree.read(normPath);
+                if (content) {
+                    const formatted = prettier.format(content.toString(), {
+                        semi: true,
+                        parser: "babel",
+                    });
+                    tree.overwrite(normPath, formatted);
+                }
+            };
+        }
+        function updateFile(path, appendRef, newContent) {
+            const normPath = core_1.normalize(path);
+            const buffer = tree.read(normPath);
+            const content = buffer === null || buffer === void 0 ? void 0 : buffer.toString();
+            if (!content) {
+                throw new schematics_1.SchematicsException(`${path} not found`);
+            }
+            const _appendIndex = content.indexOf(appendRef);
+            const updatedContent = content.slice(0, _appendIndex) +
+                newContent +
+                content.slice(_appendIndex);
+            tree.overwrite(normPath, prettier.format(updatedContent, { semi: true, parser: "babel" }));
+        }
+        updateFile("./fe-obe-container/src/App.js", "</Switch>", `<Route path="/${route}" component={${strings_1.classify(name)}Lazy} /> \n`);
+        updateFile("./fe-obe-container/src/App.js", "const history", `const ${strings_1.classify(name)}Lazy = lazy(() => import("./components/${strings_1.classify(name)}App")); \n`);
+        updateFile("./fe-obe-container/config/webpack.dev.js", "// mfeRemotesEntries", `${strings_1.camelize(name)}: "${strings_1.camelize(name)}@http://localhost:${port}/remoteEntry.js", \n`);
+        updateFile("./fe-obe-container/config/webpack.prod.js", "// mfeRemotesEntries", `${strings_1.camelize(name)}: \`${strings_1.camelize(name)}@obe/modulos/${name}/remoteEntry.js\`, \n`);
+        function generateWrapper() {
+            const templateSource = schematics_1.apply(schematics_1.url("./files/wrapper"), [
+                schematics_1.template(Object.assign(Object.assign({}, _options), core_1.strings)),
+                schematics_1.move(core_1.normalize("./fe-obe-container/src/components")),
+            ]);
+            return schematics_1.mergeWith(templateSource, schematics_1.MergeStrategy.Overwrite);
+        }
+        const rule = schematics_1.chain([
+            generateWrapper,
+            formatFile(`./fe-obe-container/src/components/${strings_1.classify(name)}App.js`),
+        ]);
+        return rule(tree, _context);
+    };
+}
+exports.addMFEObe = addMFEObe;
 //# sourceMappingURL=index.js.map

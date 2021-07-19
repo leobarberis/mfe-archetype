@@ -5,3 +5,4 @@ export declare function addMFE(_options: Schema): Rule;
 export declare function newContainer(_options: Schema): Rule;
 export declare function buildContainer(_options: Schema): Rule;
 export declare function newMfe(_options: Schema): Rule;
+export declare function addMFEObe(_options: Schema): Rule;

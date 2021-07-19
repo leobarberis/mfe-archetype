@@ -235,3 +235,83 @@ export function newMfe(_options: Schema): Rule {
     return rule(tree, _context) as Rule;
   };
 }
+
+export function addMFEObe(_options: Schema): Rule {
+  return (tree: Tree, _context: SchematicContext) => {
+    const { name, port, route} = _options;
+    validatePort(port);
+    function formatFile(path: string): Rule {
+      return () => {
+        const normPath = normalize(path);
+        const content = tree.read(normPath);
+        if (content) {
+          const formatted = prettier.format(content.toString(), {
+            semi: true,
+            parser: "babel",
+          });
+          tree.overwrite(normPath, formatted);
+        }
+      };
+    }
+
+    function updateFile(path: string, appendRef: string, newContent: string) {
+      const normPath = normalize(path);
+      const buffer = tree.read(normPath);
+      const content = buffer?.toString();
+      if (!content) {
+        throw new SchematicsException(`${path} not found`);
+      }
+
+      const _appendIndex = content.indexOf(appendRef);
+      const updatedContent =
+        content.slice(0, _appendIndex) +
+        newContent +
+        content.slice(_appendIndex);
+      tree.overwrite(
+        normPath,
+        prettier.format(updatedContent, { semi: true, parser: "babel" })
+      );
+    }
+
+    updateFile(
+      "./fe-obe-container/src/App.js",
+      "</Switch>",
+      `<Route path="/${route}" component={${classify(name)}Lazy} /> \n`
+    );
+    updateFile(
+      "./fe-obe-container/src/App.js",
+      "const history",
+      `const ${classify(name)}Lazy = lazy(() => import("./components/${classify(
+        name
+      )}App")); \n`
+    );
+    updateFile(
+      "./fe-obe-container/config/webpack.dev.js",
+      "// mfeRemotesEntries",
+      `${camelize(name)}: "${camelize(
+        name
+      )}@http://localhost:${port}/remoteEntry.js", \n`
+    );
+    updateFile(
+      "./fe-obe-container/config/webpack.prod.js",
+      "// mfeRemotesEntries",
+      `${camelize(name)}: \`${camelize(
+        name
+      )}@obe/modulos/${name}/remoteEntry.js\`, \n`
+    );
+
+    function generateWrapper(): Rule {
+      const templateSource = apply(url("./files/wrapper"), [
+        template({ ..._options, ...strings }),
+        move(normalize("./fe-obe-container/src/components")),
+      ]);
+      return mergeWith(templateSource, MergeStrategy.Overwrite);
+    }
+
+    const rule = chain([
+      generateWrapper,
+      formatFile(`./fe-obe-container/src/components/${classify(name)}App.js`),
+    ]);
+    return rule(tree, _context) as Rule;
+  };
+}
