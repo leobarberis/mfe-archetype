@@ -3,12 +3,12 @@
   "schematics": {
     "mfe": {
       "description": "MFE Generation",
-      "factory": "./mfe-archetype/index#newMfe",
+      "factory": "./mfe-archetype/new-mfe#newMfe",
       "schema": "./mfe-archetype/schema.json"
     },
     "new-container": {
       "description": "Container Generation",
-      "factory": "./mfe-archetype/index#newContainer"
+      "factory": "./mfe-archetype/new-container#newContainer"
     },    
     "build-container": {
       "description": "Container Dev Generation",
@@ -16,17 +16,12 @@
     },
     "add-mfe": {
       "description": "Add MFE to Container",
-      "factory": "./mfe-archetype/index#addMFE",
+      "factory": "./mfe-archetype/add-mfe#addMFE",
       "schema": "./mfe-archetype/schema-add-mfe.json"
-    },
-    "add-mfe-obe": {
-      "description": "Add MFE to Container",
-      "factory": "./mfe-archetype/index#addMFEObe",
-      "schema": "./mfe-archetype/schema-add-mfe.json"
-    },      
+    },     
     "delete-mfe": {
       "description": "Delete MFE from Container",
-      "factory": "./mfe-archetype/index#deleteMFE",
+      "factory": "./mfe-archetype/delete-mfe#deleteMFE",
       "schema": "./mfe-archetype/schema-delete-mfe.json"
     }
   }

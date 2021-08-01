@@ -12,9 +12,9 @@ RUN npm install -g @angular-devkit/schematics-cli
 RUN npm install -g mfe-archetype
 
 USER root
-RUN schematics mfe-archetype:build-container --fw=$FW --name=$NAME --port=$PORT --routing=$ROUTING --route=$ROUTE --env=dev
+RUN schematics mfe-archetype:build-container --fw=$FW --name=$NAME --port=$PORT --routing=$ROUTING --route=$ROUTE
 
-WORKDIR /usr/src/app/container
+WORKDIR /usr/src/app/fe-obe-container
 
 EXPOSE 3008
 CMD [ "npm", "start" ]
