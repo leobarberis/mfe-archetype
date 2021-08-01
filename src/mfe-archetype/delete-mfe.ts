@@ -1,9 +1,5 @@
 import { normalize } from "@angular-devkit/core";
-import {
-  camelize,
-  capitalize,
-  classify,
-} from "@angular-devkit/core/src/utils/strings";
+import { camelize, classify } from "@angular-devkit/core/src/utils/strings";
 import {
   SchematicContext,
   SchematicsException,
@@ -14,33 +10,33 @@ import { Schema } from "./schema";
 
 export function deleteMFE(_options: Schema) {
   return (tree: Tree, _context: SchematicContext) => {
-    const { name, port } = _options;
+    const { name, port, route } = _options;
     validatePort(port);
 
     deleteFromFile(
       "./src/App.js",
-      `<Route path="/${name}" component={${capitalize(name)}Lazy} />`,
+      `<Route path="/${route}" component={${classify(name)}Lazy} /> \n`,
       tree
     );
     deleteFromFile(
       "./src/App.js",
-      `const ${capitalize(
+      `const ${classify(name)}Lazy = lazy(() => import("./components/${classify(
         name
-      )}Lazy = lazy(() => import("./components/${capitalize(name)}App"));`,
+      )}App")); \n`,
       tree
     );
     deleteFromFile(
       "./config/webpack.dev.js",
       `${camelize(name)}: "${camelize(
         name
-      )}@http://localhost:${port}/remoteEntry.js",`,
+      )}@http://localhost:${port}/remoteEntry.js", \n`,
       tree
     );
     deleteFromFile(
       "./config/webpack.prod.js",
       `${camelize(name)}: \`${camelize(
         name
-      )}@\${${name}_domain}/remoteEntry.js\`,`,
+      )}@/obe/modulos/${name}/remoteEntry.js\`, \n`,
       tree
     );
 
