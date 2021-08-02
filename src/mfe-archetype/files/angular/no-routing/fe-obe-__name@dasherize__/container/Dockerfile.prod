@@ -8,6 +8,10 @@ ENV ROUTE <%= route %>
 
 WORKDIR /usr/src/app
 
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y nodejs \
+    npm
+
 RUN npm install -g @angular/cli
 RUN npm install -g @angular-devkit/schematics-cli
 RUN npm install -g mfe-archetype
@@ -20,7 +24,8 @@ RUN npm run build
 
 RUN rm -rf /etc/nginx/conf.d
 RUN mkdir -p /etc/nginx/conf.d
+RUN mkdir -p /usr/src/app/logs
 COPY ./nginx/default.container.conf /etc/nginx/conf.d/
 
 RUN mkdir -p /usr/share/nginx/html/obe/modulos/fe-obe-container/
-RUN mv ./dist/ /usr/share/nginx/html/obe/modulos/fe-obe-container/
+RUN mv ./dist/* /usr/share/nginx/html/obe/modulos/fe-obe-container/

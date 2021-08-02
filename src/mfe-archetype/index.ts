@@ -59,7 +59,7 @@ function initMfe(_options: Schema): Rule {
       "// mfeRemotesEntries",
       `${camelize(name)}: \`${camelize(
         name
-      )}@/obe/modulos/${name}/remoteEntry.js\`, \n`,
+      )}@http://localhost/obe/modulos/${name}/remoteEntry.js\`, \n`,
       tree
     );
 
