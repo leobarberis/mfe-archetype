@@ -1,4 +1,4 @@
-FROM docker-spv.artifactory.gscorp.ad/nginx-spv:1.17.8
+FROM docker-spv.artifactory.gscorp.ad/angular-cli-spv:12.0.3 AS build
 
 ENV FW <%= fw %>
 ENV NAME <%= name %>
@@ -8,24 +8,22 @@ ENV ROUTE <%= route %>
 
 WORKDIR /usr/src/app
 
-RUN apt-get update && apt-get upgrade -y && \
-    apt-get install -y nodejs \
-    npm
-
-RUN npm install -g @angular/cli
 RUN npm install -g @angular-devkit/schematics-cli
 RUN npm install -g mfe-archetype
 
 USER root
-RUN schematics mfe-archetype:build-container --fw=$FW --name=$NAME --port=$PORT --routing=$ROUTING --route=$ROUTE
 
+RUN schematics mfe-archetype:build-container --fw=$FW --name=$NAME --port=$PORT --routing=$ROUTING --route=$ROUTE
 WORKDIR /usr/src/app/fe-obe-container
 RUN npm run build
+
+FROM docker-spv.artifactory.gscorp.ad/nginx-spv:1.17.8
+
+WORKDIR /usr/src/app/fe-obe-container
 
 RUN rm -rf /etc/nginx/conf.d
 RUN mkdir -p /etc/nginx/conf.d
 RUN mkdir -p /usr/src/app/logs
 COPY ./nginx/default.container.conf /etc/nginx/conf.d/
-
 RUN mkdir -p /usr/share/nginx/html/obe/modulos/fe-obe-container/
-RUN mv ./dist/* /usr/share/nginx/html/obe/modulos/fe-obe-container/
+COPY --from=build /usr/src/app/fe-obe-container/dist /usr/share/nginx/html/obe/modulos/fe-obe-container
