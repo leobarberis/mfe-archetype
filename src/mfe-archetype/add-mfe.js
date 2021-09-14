@@ -7,11 +7,11 @@ const schematics_1 = require("@angular-devkit/schematics");
 const helper_1 = require("./helper");
 function addMFE(_options) {
     return (tree, _context) => {
-        const { name, port, route } = _options;
+        const { name, port, route, baseDevUrl } = _options;
         helper_1.validatePort(port);
         helper_1.updateFile("./src/App.js", "</Switch>", `<Route path="/${route}" component={${strings_1.classify(name)}Lazy} /> \n`, tree);
         helper_1.updateFile("./src/App.js", "const history", `const ${strings_1.classify(name)}Lazy = lazy(() => import("./components/${strings_1.classify(name)}App")); \n`, tree);
-        helper_1.updateFile("./config/webpack.dev.js", "// mfeRemotesEntries", `${strings_1.camelize(name)}: "${strings_1.camelize(name)}@http://localhost:${port}/remoteEntry.js", \n`, tree);
+        helper_1.updateFile("./config/webpack.dev.js", "// mfeRemotesEntries", `${strings_1.camelize(name)}: "${strings_1.camelize(name)}@http://localhost:${port}${baseDevUrl}remoteEntry.js", \n`, tree);
         helper_1.updateFile("./config/webpack.prod.js", "// mfeRemotesEntries", `${strings_1.camelize(name)}: \`${strings_1.camelize(name)}@/obe/modulos/${name}/remoteEntry.js\`, \n`, tree);
         function generateWrapper() {
             const templateSource = schematics_1.apply(schematics_1.url("./files/wrapper"), [

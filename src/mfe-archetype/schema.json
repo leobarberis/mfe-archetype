@@ -60,8 +60,20 @@
         "message": "Which route will your MFE render with?",
         "type": "input"
       }
+    },
+    "baseDevUrl": {
+      "type": "string",
+      "$default": {
+        "$source": "argv",
+        "index": 5
+      },
+      "default": "/",
+      "x-prompt": {
+        "message": "Which base url does your MFE use for development?",
+        "type": "input"
+      }
     }
   },
-  "required": ["name", "fw", "routing", "port", "route"],
+  "required": ["name", "fw", "routing", "port", "route", "baseDevUrl"],
   "additionalProperties": false
 }

@@ -17,7 +17,7 @@ import { Schema } from "./schema";
 
 export function addMFE(_options: Schema): Rule {
   return (tree: Tree, _context: SchematicContext) => {
-    const { name, port, route } = _options;
+    const { name, port, route, baseDevUrl } = _options;
     validatePort(port);
 
     updateFile(
@@ -39,7 +39,7 @@ export function addMFE(_options: Schema): Rule {
       "// mfeRemotesEntries",
       `${camelize(name)}: "${camelize(
         name
-      )}@http://localhost:${port}/remoteEntry.js", \n`,
+      )}@http://localhost:${port}${baseDevUrl}remoteEntry.js", \n`,
       tree
     );
     updateFile(
