@@ -29,7 +29,7 @@ export function buildContainer(_options: Schema): Rule {
 
 function initMfe(_options: Schema): Rule {
   return (tree: Tree, _context: SchematicContext) => {
-    const { name, port, route } = _options;
+    const { name, port, route, baseDevUrl } = _options;
     validatePort(port);
 
     updateFile(
@@ -51,7 +51,7 @@ function initMfe(_options: Schema): Rule {
       "// mfeRemotesEntries",
       `${camelize(name)}: "${camelize(
         name
-      )}@http://localhost:${port}/remoteEntry.js", \n`,
+      )}@http://localhost:${port}${baseDevUrl}remoteEntry.js", \n`,
       tree
     );
     updateFile(

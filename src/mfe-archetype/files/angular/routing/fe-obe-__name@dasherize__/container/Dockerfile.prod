@@ -5,6 +5,7 @@ ENV NAME <%= name %>
 ENV PORT <%= port %>
 ENV ROUTING <%= routing %>
 ENV ROUTE <%= route %>
+ENV BASE_DEV_URL <%= baseDevUrl %>
 
 WORKDIR /usr/src/app
 
@@ -13,7 +14,7 @@ RUN npm install -g mfe-archetype
 
 USER root
 
-RUN schematics mfe-archetype:build-container --fw=$FW --name=$NAME --port=$PORT --routing=$ROUTING --route=$ROUTE
+RUN schematics mfe-archetype:build-container --fw=$FW --name=$NAME --port=$PORT --routing=$ROUTING --route=$ROUTE --baseDevUrl=$BASE_DEV_URL
 WORKDIR /usr/src/app/fe-obe-container
 RUN npm run build
 

@@ -4,4 +4,5 @@ export interface Schema {
   routing: boolean;
   port: string;
   route: string;
+  baseDevUrl: string;
 }
